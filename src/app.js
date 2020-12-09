@@ -12,12 +12,17 @@ const {
 	GraphQLObjectType,
 } = require("graphql");
 
+const PORT = process.env.PORT || 3001;
+const HOST = process.env.HOST || '0.0.0.0';
+const MONGO_URL = process.env.MONGO_URL || 'mongodb://localhost:27017/radarTechDB';
+
 var app = Express();
 var cors = require("cors");
 
 // no user needed locally but we need it for the prod environment 
-// mongoose.connect('mongodb://localhost:27017/radarTechDB', { useNewUrlParser: true });
-mongoose.connect('mongodb://fast-snow-hulu:a4bf6ea0fcb3183e7810a0bb0fa962d3@dokku-mongo-fast-snow-hulu:27017/fast_snow_hulu', { useNewUrlParser: true });
+// mongoose.connect(, { useNewUrlParser: true });
+//mongoose.connect('mongodb://fast-snow-hulu:a4bf6ea0fcb3183e7810a0bb0fa962d3@dokku-mongo-fast-snow-hulu:27017/fast_snow_hulu', { useNewUrlParser: true });
+mongo.connect(MONGO_URL, { useNewUrlParser: true });
 
 const AnswerModel = mongoose.model("answer", {
 	age: String,
