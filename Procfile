@@ -1,1 +1,1 @@
-web: gunicorn radar-tech-backend:app
+web: node src/app.js
