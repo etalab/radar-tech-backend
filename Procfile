@@ -1,0 +1,1 @@
+web: gunicorn radar-tech-backend:app
