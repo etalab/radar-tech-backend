@@ -2,4 +2,6 @@
 node_modules/
 
 # PYTHON
-scripts/lib/*
+*lib
+*bin
+*pyvenv.cfg
