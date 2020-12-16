@@ -27,32 +27,28 @@ var cors = require("cors");
 mongoose.connect(MONGO_URL, { useNewUrlParser: true });
 
 const AnswerModel = mongoose.model("answer", {
-	age: String,
 	email: String,
-	gender: String,
-	pro_domain: String
+	demo_age: String,
+	demo_genre: String,
+	education_formation: String
 });
+
+const answerTypeGql = {
+	id: { type: GraphQLID },
+	email: { type: GraphQLNonNull(GraphQLString) },
+	demo_age: { type: GraphQLString },
+	demo_genre: { type: GraphQLString },
+	education_formation: { type: GraphQLString },
+}
 
 const AnswerType = new GraphQLObjectType({
 	name: "Answer",
-	fields: {
-		id: { type: GraphQLID },
-		email: { type: GraphQLString },
-		age: { type: GraphQLString },
-		gender: { type: GraphQLString },
-		pro_domain: { type: GraphQLString },
-	}
+	fields: answerTypeGql
 });
 
 const AnswerInputType = new GraphQLInputObjectType({
 	name: "AnswerInput",
-	fields: {
-		id: { type: GraphQLID },
-		email: { type: GraphQLString },
-		age: { type: GraphQLString },
-		gender: { type: GraphQLString },
-		pro_domain: { type: GraphQLString },
-	}
+	fields: answerTypeGql
 });
 
 const schema = new GraphQLSchema({
@@ -85,12 +81,7 @@ const schema = new GraphQLSchema({
 		fields: {
 			createAnswer: {
 				type: AnswerType,
-				args: {
-					age: { type: GraphQLString },
-					email: { type: GraphQLNonNull(GraphQLString)},
-					gender: { type: GraphQLString },
-					pro_domain: { type: GraphQLString },
-				},
+				args: answerTypeGql,
 				resolve: async (root, args, context, info) => {
 					return await AnswerModel.collection.insertOne(args)
 					.then(result => {

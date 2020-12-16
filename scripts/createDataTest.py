@@ -3,7 +3,12 @@ from gql import gql, Client
 from gql.transport.aiohttp import AIOHTTPTransport
 
 # DATAS
-name = ["demo_genre", "demo_age", "education_formation"]
+name = [
+  "email",
+  "demo_genre", 
+  "demo_age", 
+  "education_formation"
+]
 
 demo_genre_list = [
     "Homme",
@@ -11,17 +16,16 @@ demo_genre_list = [
     "Non-binaire"
 ]
 
-
-demo_age_list = ["15-19"
-    "20-24"
-    "25-29"
-    "30-34"
-    "35-39"
-    "40-44"
-    "45-49"
+demo_age_list = ["15-19",
+    "20-24",
+    "25-29",
+    "30-34",
+    "35-39",
+    "40-44",
+    "45-49",
     "50-54",
     "55-59",
-    "60-64"
+    "60-64",
     "65+"]
 
 education_formation_list = [
@@ -50,39 +54,36 @@ education_formation_list = [
 
 # Create 200 occurences
 occList = []
-for i in [0,200]:
+for i in range(0,200):
   occ = {
-    "email": "test${i}@test.com".format(i),
+    "email": "test{}@test.com".format(i),
     "demo_genre": random.choice(demo_genre_list),
     "demo_age": random.choice(demo_age_list),
     "education_formation": random.choice(education_formation_list)
   }
   occList.append(occ)
+print(occList)
 
 # push data in database with graphql
 # Select your transport with a defined url endpoint
-transport = AIOHTTPTransport(url="https://countries.trevorblades.com/")
+transport = AIOHTTPTransport(url="http://localhost:3001/graphql")
 
 # Create a GraphQL client using the defined transport
 client = Client(transport=transport, fetch_schema_from_transport=True)
 
 # Provide a GraphQL query
-query = gql(
-    """
-    query getContinents {
-      continents {
-        code
-        name
-      }
+
+mutation = gql('''
+  mutation CreateMultipleAnswer($answerList: [AnswerInput]) {
+    createMultipleAnswer(answerList: $answerList) {
+      email
     }
-"""
+  }
+'''
 )
 
 # Execute the query on the transport
-result = client.execute(query)
+result = client.execute(mutation, variable_values={ "answerList": occList })
 print(result)
-
-
-  
 
 
