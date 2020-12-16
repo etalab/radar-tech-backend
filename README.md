@@ -107,3 +107,13 @@ mutation CreateMultipleAnswer($answerList: [AnswerInput]) {
     }
   ]
 }
+
+## Get 
+```{
+  answer {
+    email,
+    demo_age,
+    demo_genre,
+    education_formation
+	}
+}``
