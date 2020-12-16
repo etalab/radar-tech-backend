@@ -71,5 +71,39 @@ Exemple de données :
 }
 `
 
+# GRAPHIQL 
+## Insert an answer
+### Mutation
+ mutation CreateAnswer ($email: String!, $age: String) {
+  	createAnswer(email: $email, age: $age) {
+      age,
+      email
+    }
+  }
+### Query Variables
+{
+  "email": "fgsfg@fdfdfs.fr",
+  "age": "truc"
+}
 
-
+## Insert Multiple Answers
+### Mutation
+mutation CreateMultipleAnswer($answerList: [AnswerInput]) {
+  createMultipleAnswer(answerList: $answerList) {
+    age
+    email
+  }
+}
+### Query Variables
+{
+  "answerList": [
+    {
+      "email": "aaa@fdfdfs.fr",
+      "age": "30-45"
+    },
+    {
+      "email": "bbb@fdfdfs.fr",
+      "age": "45-60"
+    }
+  ]
+}

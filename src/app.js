@@ -7,9 +7,11 @@ const {
 	GraphQLString,
 	GraphQLList,
 	GraphQLType,
+	GraphQLInputType,
 	GraphQLSchema,
 	GraphQLNonNull,
 	GraphQLObjectType,
+	GraphQLInputObjectType
 } = require("graphql");
 
 const PORT = process.env.PORT || 3001;
@@ -33,6 +35,17 @@ const AnswerModel = mongoose.model("answer", {
 
 const AnswerType = new GraphQLObjectType({
 	name: "Answer",
+	fields: {
+		id: { type: GraphQLID },
+		email: { type: GraphQLString },
+		age: { type: GraphQLString },
+		gender: { type: GraphQLString },
+		pro_domain: { type: GraphQLString },
+	}
+});
+
+const AnswerInputType = new GraphQLInputObjectType({
+	name: "AnswerInput",
 	fields: {
 		id: { type: GraphQLID },
 		email: { type: GraphQLString },
@@ -68,9 +81,9 @@ const schema = new GraphQLSchema({
 	}),
 	// Create Mutation
 	mutation: new GraphQLObjectType({
-		name: "Create",
+		name: "Mutation",
 		fields: {
-			answer: {
+			createAnswer: {
 				type: AnswerType,
 				args: {
 					age: { type: GraphQLString },
@@ -78,9 +91,29 @@ const schema = new GraphQLSchema({
 					gender: { type: GraphQLString },
 					pro_domain: { type: GraphQLString },
 				},
-				resolve: (root, args, context, info) => {
-					var answer = new AnswerModel(args);
-					return answer.save();
+				resolve: async (root, args, context, info) => {
+					return await AnswerModel.collection.insertOne(args)
+					.then(result => {
+						console.log(result);
+						return result["ops"][0];
+					}).catch(err => {
+						console.log(err);
+						return err;
+					});
+				}
+			},
+			createMultipleAnswer: {
+				type: GraphQLList(AnswerType),
+				args: {
+					answerList: { type: GraphQLList(AnswerInputType) }
+				},
+				resolve: async (root, args, context, info) => {
+					return await AnswerModel.collection.insertMany(args["answerList"])
+					.then(res => res["ops"])
+					.catch(err => {
+						console.log(err);
+						return err;
+					});
 				}
 			}
 		}
