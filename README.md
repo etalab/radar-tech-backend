@@ -2,6 +2,7 @@
 ## Objectif 
 ...
 ## Pré-requis
+- graphql
 - nodejs
 - mongodb
 
@@ -10,76 +11,70 @@
 # DOKKU
 ## Backend
 1. Créer des variables d'environnement
--> vérifier env|grep DOKKU
-
-export DOKKU_HOST='studio-01.infra.data.gouv.fr'
-export DOKKU_PORT='22'
-export DOKKU_GIT_REMOTE='dokku'
+```
+$ export DOKKU_HOST='studio-01.infra.data.gouv.fr'
+$ export DOKKU_PORT='22'
+$ export DOKKU_GIT_REMOTE='dokku'
+```
+Vérifier que les variables sont à jour :
+```
+$ env | grep DOKKU
+```
 
 2. Cloner le repo en local
 3. dans le dossier du repo lancer 
-`dokku apps:create`
-4. Push la branche principale
-Crée un app
-Une image docker avec toutes les dépendances du projet
+```
+$ dokku apps:create
+```
+4. Pousser la branche principale
+```
+$ git push dokku master
+```
 -> résulat un lien http pour accéder à l'application
 
 ### Dans mon projet express/nodejs: 
-Ajouter un procfile 
-git add / git commit
-git push sur master met à jour l'application
+Ajouter un procfile
+```
+$ git add / git commit
+$ git push dokku master #sur master met à jour l'application
+```
 
 ## Base de données
 Le plugin mongodb existe déjà
 Sur la doc du plugin en question ou dokku mongo
-dokku mongo:create <nom> 
-
+```
+$ dokku mongo:create <nom> 
+```
 ## Frontend
-dokku config : liste les variables enregistrées 
-dokku config:set VARIABLE_NAME=VALUE
+_notes à clarifier_
+```
+$ dokku config #liste les variables enregistrées 
+$ dokku config:set VARIABLE_NAME=VALUE
+```
 quand on configure une nouvelle variable il redemmare l'app
 On va créer une variable pour configurer la communication avec le back
 faire le lien entre les deux conteneurs
 avec la lib os on peut récupérer ces variables
 
-état de l'app dokku:ps inspect <app-name>
-dokku ps:stop <app-name>
+```
+$ dokku:ps inspect <app-name> #état de l'app 
+$ dokku ps:stop <app-name>
+$ dokku logs --tail
+$ dokku config:set fast-snow-hulu DOKKU_PROXY_PORT_MAP=http:80:5000
+$ dokku config:set fast-snow-hulu NPM_CONFIG_PRODUCTION=false
+```
 
-    dokku logs --tail
-
-
-dokku config:set fast-snow-hulu DOKKU_PROXY_PORT_MAP=http:80:5000
-dokku config:set fast-snow-hulu NPM_CONFIG_PRODUCTION=false
-
-# GraphQL
-## Mutation Côté Client
- `mutation CreateAnswer ($age: String, $email: String!, $gender: String, $pro_domain: String) {
-    answer(age: $age, email: $email, gender: $gender, pro_domain: $pro_domain) {
-        id,
-        age,
-        email
-    }
-  }`
-
-Exemple de données : 
-`
-{
-  "age": "20-30",
-  "email": "test2@test.fr",
-  "gender": "femme",
-  "pro_domain": "ingé info"
-}
-`
-
-# GRAPHIQL 
+# GRAPHQL 
 ## Insert an answer
 ### Mutation
- mutation CreateAnswer ($email: String!, $age: String) {
-  	createAnswer(email: $email, age: $age) {
-      age,
+ ```
+mutation CreateAnswer ($email: String!, $age: String) {
+  	createAnswer(email: $email, demo_age: $age) {
+      demo_age,
       email
     }
   }
+```
 ### Query Variables
 {
   "email": "fgsfg@fdfdfs.fr",
@@ -88,32 +83,35 @@ Exemple de données :
 
 ## Insert Multiple Answers
 ### Mutation
+```
 mutation CreateMultipleAnswer($answerList: [AnswerInput]) {
   createMultipleAnswer(answerList: $answerList) {
-    age
+    demo_age
     email
   }
 }
+```
 ### Query Variables
 {
   "answerList": [
     {
       "email": "aaa@fdfdfs.fr",
-      "age": "30-45"
+      "demo_age": "30-45"
     },
     {
       "email": "bbb@fdfdfs.fr",
-      "age": "45-60"
+      "demo_age": "45-60"
     }
   ]
 }
 
 ## Get 
-```{
+```
+{
   answer {
     email,
     demo_age,
     demo_genre,
     education_formation
-	}
+  }
 }``
