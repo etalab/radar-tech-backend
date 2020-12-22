@@ -67,7 +67,7 @@ $ dokku config:set fast-snow-hulu NPM_CONFIG_PRODUCTION=false
 # GRAPHQL 
 ## Insert an answer
 ### Mutation
- ```
+```
 mutation CreateAnswer ($email: String!, $age: String) {
   	createAnswer(email: $email, demo_age: $age) {
       demo_age,
@@ -76,10 +76,12 @@ mutation CreateAnswer ($email: String!, $age: String) {
   }
 ```
 ### Query Variables
+```
 {
   "email": "fgsfg@fdfdfs.fr",
   "age": "truc"
 }
+```
 
 ## Insert Multiple Answers
 ### Mutation
@@ -92,6 +94,7 @@ mutation CreateMultipleAnswer($answerList: [AnswerInput]) {
 }
 ```
 ### Query Variables
+```
 {
   "answerList": [
     {
@@ -104,6 +107,7 @@ mutation CreateMultipleAnswer($answerList: [AnswerInput]) {
     }
   ]
 }
+```
 
 ## Get 
 ```
