@@ -118,4 +118,5 @@ mutation CreateMultipleAnswer($answerList: [AnswerInput]) {
     demo_genre,
     education_formation
   }
-}``
+}
+``'
