@@ -66,7 +66,8 @@ print(occList)
 
 # push data in database with graphql
 # Select your transport with a defined url endpoint
-transport = AIOHTTPTransport(url="http://fast-snow-hulu.app.etalab.studio/graphql")
+transport = AIOHTTPTransport(url="http://localhost:3001/graphql")
+# transport = AIOHTTPTransport(url="http://fast-snow-hulu.app.etalab.studio/graphql")
 
 # Create a GraphQL client using the defined transport
 client = Client(transport=transport, fetch_schema_from_transport=True)
