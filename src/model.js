@@ -8,6 +8,8 @@ mongoose.connect(MONGO_URL, { useNewUrlParser: true });
 
 const AnswerModel = mongoose.model("answer", {
 	email: String,
+	emailHash: String,
+	salt: String,
 	demo_age: String,
 	demo_genre: String,
 	education_formation: String,

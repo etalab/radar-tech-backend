@@ -2,9 +2,10 @@ const Express = require("express");
 const { graphqlHTTP } = require('express-graphql'); 
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const sendEmail = require("./resolvers.js");
+const postAnswer = require("./resolvers.js");
 const confirmEmail = require("./confirmEmail.js");
 const AnswerModel = require("./model.js");
+require('dotenv').config();
 
 const {
 	GraphQLID,
@@ -18,6 +19,8 @@ const {
 	GraphQLInputObjectType,
 	GraphQLBoolean
 } = require("graphql");
+
+console.log(process.env);
 
 const PORT = process.env.PORT || 3001;
 const HOST = process.env.HOST || '0.0.0.0';
@@ -77,15 +80,7 @@ const schema = new GraphQLSchema({
 					answer: { type: (AnswerInputType) }
 				},
 				resolve: async (root, args, context, info) => {
-					sendEmail();
-					return await AnswerModel.collection.insertOne(args["answer"])
-					.then(result => {
-						console.log(result);
-						return result["ops"][0];
-					}).catch(err => {
-						console.log(err);
-						return err;
-					});
+					return postAnswer(args["answer"]);
 				}
 			},
 			createMultipleAnswer: {
@@ -116,7 +111,7 @@ app.get('/', (req, res) => {
   res.send('Hello, Dokku!');
 });
 
-const confirEmail = async (req, res) => {
+app.get('/confirmEmail', async (req, res) => {
 	let email = req.query.email;
 	console.log(email);
 	await confirmEmail(email)
@@ -125,9 +120,7 @@ const confirEmail = async (req, res) => {
 		console.log(`an error occured during mail confirmation ${e}`);
 		return res.status(500).end();
 	})
-};
-
-app.get('/confirmEmail', confirEmail);
+});
 
 app.use(
   '/graphql',
