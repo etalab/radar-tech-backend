@@ -3,8 +3,7 @@ const { graphqlHTTP } = require('express-graphql');
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const postAnswer = require("./resolvers.js");
-const confirmEmail = require("./confirmEmail.js");
-const AnswerModel = require("./model.js");
+const { AnswerModel, confirmEmail } = require("./model.js");
 require('dotenv').config();
 
 const {
@@ -33,7 +32,8 @@ const answerTypeGql = {
 	demo_age: { type: GraphQLString },
 	demo_genre: { type: GraphQLString },
 	education_formation: { type: GraphQLString },
-	confirm_email: { type: GraphQLBoolean, default: false}
+	confirm_email: { type: GraphQLBoolean, default: false},
+	email_sent: { type: GraphQLBoolean, default: false}
 }
 
 const AnswerType = new GraphQLObjectType({
@@ -112,12 +112,12 @@ app.get('/', (req, res) => {
 });
 
 app.get('/confirmEmail', async (req, res) => {
-	let email = req.query.email;
-	console.log(email);
-	await confirmEmail(email)
-	.then(res.send(`confirm ${email}`))
+	let hash = req.query.hash;
+	console.log(`received hash is ${hash}`);
+	return await confirmEmail(hash)
+	.then(() => res.status(200).send('Merci, votre participation a été confirmée.'))
 	.catch(e => {
-		console.log(`an error occured during mail confirmation ${e}`);
+		console.log(`an error occured during mail confirmation: ${e}`);
 		return res.status(500).end();
 	})
 });

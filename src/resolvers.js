@@ -1,5 +1,5 @@
 const crypto = require("crypto");
-const AnswerModel = require("./model.js");
+const { AnswerModel, confirmEmail, updateEmailSent } = require("./model.js");
 require('dotenv').config();
 
 const PORT = process.env.PORT || 3001;
@@ -17,8 +17,7 @@ var apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 
 // var sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail(); // SendSmtpEmail | Values to send a transactional email
 
-const sendEmail = (email, hash) => {
-  console.log(`>>>>>>>> ${email}  <<<<<<`);
+const sendEmail = async (answer) => {
   const body = {
     "sender":{  
       "name":"Audrey from RadarTech",
@@ -26,38 +25,38 @@ const sendEmail = (email, hash) => {
     },
     "to":[  
       {  
-        "email":`${email}`,
+        "email":`${answer.email}`,
       }
     ],
-    "subject":"Validation de votre participation au Radar Tech",
-    "htmlContent":`<html><head></head><body><p>Cliquez sur <a href="${API_URL}/confirmEmail?email=${email}">ce lien</a> pour valider votre participation</p></body></html>`
+    "subject":"Validation de votre participation au Radar Tech 2021",
+    "htmlContent":`<html><head></head><body><p>Cliquez sur <a href="${API_URL}/confirmEmail?hash=${answer.emailHash}">ce lien</a> pour valider votre participation au questionnaire.</p></body></html>`
   };
 
-  apiInstance.sendTransacEmail(body).then(function(data) {
-    console.log('API called successfully.');
-  }, function(error) {
+  return apiInstance.sendTransacEmail(body)
+  .then(updateEmailSent(hash, true))
+  .then(() => answer)
+  .catch(e => {
     console.error(error.error);
+    return error.error;
   });
 }
 
 const postAnswer = async (answer) => {
   let newAnswer = answer;
-  // Creating a unique salt for a particular user 
+  // Creating a unique salt
   salt = crypto.randomBytes(16).toString('hex');
   console.log(`salt ${salt}`);
-  // Hashing user's salt and email with 1000 iterations, 
+  // Hashing salt and email with 1000 iterations, 
   hash = crypto.pbkdf2Sync(newAnswer.email, salt, 1000, 32, `sha512`).toString('hex');
   console.log(`email hashed ${hash}`);
 
   newAnswer["salt"] = salt;
   newAnswer["emailHash"] = hash;
 
-  return await AnswerModel.collection.insertOne(newAnswer)
-  .then(result => {
-    console.log(result["ops"][0]);
-    sendEmail(newAnswer.email, newAnswer.emailHash);
-    return result["ops"][0];
-  }).catch(err => {
+  return AnswerModel.collection.insertOne(newAnswer)
+  .then(sendEmail(result["ops"][0]))
+  .then(() => newAnswer)
+  .catch(err => {
     console.log(err);
     return err;
   });

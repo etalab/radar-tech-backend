@@ -7,13 +7,54 @@ console.log(MONGO_URL);
 mongoose.connect(MONGO_URL, { useNewUrlParser: true });
 
 const AnswerModel = mongoose.model("answer", {
-	email: String,
-	emailHash: String,
+	email: {
+		type: String,
+		required: true,
+		//unique: true // TODO to be added
+	},
+	emailHash: {
+		type: String,
+		required: true
+	},
 	salt: String,
 	demo_age: String,
 	demo_genre: String,
 	education_formation: String,
-	confirm_email: Boolean
+	confirm_email: {
+		type: Boolean,
+		default: false
+	},
+	email_sent: {
+		type: Boolean,
+		default: false
+	}
 });
 
-module.exports = AnswerModel;
+const confirmEmail = async (emailHash) => {
+  // update confirm_email attribute
+  const condition = { emailHash }
+  , update = { confirm_email: true}
+  , options = { multi: false };
+
+  return updateAnswer(condition, update, options);
+}
+
+const updateEmailSent = async (emailHash, sent) => {
+  // update email_sent attribute
+  const condition = { emailHash }
+  , update = { email_sent: sent}
+	, options = { multi: false };
+
+  return updateAnswer(condition, update, options);
+}
+
+const updateAnswer = async (condition, update, options) => {
+  return await AnswerModel.updateOne(condition, update, options)
+  .then(data => data)
+  .catch(e => {
+    console.log(e);
+    return e;
+  });
+}
+
+module.exports = { AnswerModel, confirmEmail, updateEmailSent };
