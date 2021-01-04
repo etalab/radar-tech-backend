@@ -1,42 +1,33 @@
 const Express = require("express");
-const { graphqlHTTP } = require('express-graphql');
-const mongoose = require("mongoose");
+const { graphqlHTTP } = require('express-graphql'); 
+const cors = require("cors");
+const bodyParser = require("body-parser");
+const postAnswer = require("./resolvers.js");
+const { AnswerModel, confirmEmail } = require("./model.js");
+require('dotenv').config();
 
 const {
 	GraphQLID,
 	GraphQLString,
 	GraphQLList,
-	GraphQLType,
-	GraphQLInputType,
 	GraphQLSchema,
 	GraphQLNonNull,
 	GraphQLObjectType,
-	GraphQLInputObjectType
+	GraphQLInputObjectType,
+	GraphQLBoolean
 } = require("graphql");
 
 const PORT = process.env.PORT || 3001;
 const HOST = process.env.HOST || '0.0.0.0';
-const MONGO_URL = process.env.MONGO_URL || 'mongodb://localhost:27017/radarTechDB';
 
 var app = Express();
-var cors = require("cors");
-
-// no user needed locally but we need it for the prod environment 
-mongoose.connect(MONGO_URL, { useNewUrlParser: true });
-
-const AnswerModel = mongoose.model("answer", {
-	email: String,
-	demo_age: String,
-	demo_genre: String,
-	education_formation: String
-});
 
 const answerTypeGql = {
 	id: { type: GraphQLID },
 	email: { type: GraphQLNonNull(GraphQLString) },
 	demo_age: { type: GraphQLString },
 	demo_genre: { type: GraphQLString },
-	education_formation: { type: GraphQLString },
+	education_formation: { type: GraphQLString }
 }
 
 const AnswerType = new GraphQLObjectType({
@@ -79,16 +70,11 @@ const schema = new GraphQLSchema({
 		fields: {
 			createAnswer: {
 				type: AnswerType,
-				args: answerTypeGql,
+				args: {
+					answer: { type: (AnswerInputType) }
+				},
 				resolve: async (root, args, context, info) => {
-					return await AnswerModel.collection.insertOne(args)
-					.then(result => {
-						console.log(result);
-						return result["ops"][0];
-					}).catch(err => {
-						console.log(err);
-						return err;
-					});
+					return postAnswer(args["answer"]);
 				}
 			},
 			createMultipleAnswer: {
@@ -111,9 +97,24 @@ const schema = new GraphQLSchema({
 
 // ROUTES
 app.use(cors())
+//Here we are configuring express to use body-parser as middle-ware.
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
 app.get('/', (req, res) => {
   res.send('Hello, Dokku!');
 });
+
+app.get('/confirmEmail', async (req, res) => {
+	let hash = req.query.hash;
+	return await confirmEmail(hash)
+	.then(() => res.status(200).send('Merci, votre participation a été confirmée.'))
+	.catch(e => {
+		console.log(`an error occured during mail confirmation: ${e}`);
+		return res.status(500).end();
+	})
+});
+
 app.use(
   '/graphql',
   graphqlHTTP({

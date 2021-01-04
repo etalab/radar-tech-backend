@@ -68,9 +68,8 @@ $ dokku config:set fast-snow-hulu NPM_CONFIG_PRODUCTION=false
 ## Insert an answer
 ### Mutation
 ```
-mutation CreateAnswer ($email: String!, $age: String) {
-  	createAnswer(email: $email, demo_age: $age) {
-      demo_age,
+mutation CreateAnswer ($answer: AnswerInput) {
+  	createAnswer(answer: $answer) {
       email
     }
   }
@@ -78,8 +77,10 @@ mutation CreateAnswer ($email: String!, $age: String) {
 ### Query Variables
 ```
 {
-  "email": "fgsfg@fdfdfs.fr",
-  "age": "truc"
+  "answer": {
+  "email": "<a unique valid email>",
+  "demo_age": "<age>"
+}
 }
 ```
 
@@ -120,3 +121,15 @@ mutation CreateMultipleAnswer($answerList: [AnswerInput]) {
   }
 }
 ```
+
+# Mongo
+```
+$ use radarTechDB
+```
+Find All 
+```
+$ db.answers.find()
+```
+
+
+

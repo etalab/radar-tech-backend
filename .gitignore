@@ -5,3 +5,5 @@ node_modules/
 *lib
 *bin
 *pyvenv.cfg
+
+.env
