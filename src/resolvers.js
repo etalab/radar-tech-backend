@@ -46,10 +46,7 @@ const postAnswer = async (answer) => {
   let newAnswer = answer;
   // Creating a unique salt
   salt = crypto.randomBytes(16).toString('hex');
-  console.log(`salt ${salt}`);
-  // Hashing salt and email with 1000 iterations, 
   hash = crypto.pbkdf2Sync(newAnswer.email, salt, 1000, 32, `sha512`).toString('hex');
-  console.log(`email hashed ${hash}`);
 
   newAnswer["salt"] = salt;
   newAnswer["emailHash"] = hash;

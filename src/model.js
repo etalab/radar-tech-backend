@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 
 const MONGO_URL = process.env.MONGO_URL || 'mongodb://localhost:27017/radarTechDB';
-console.log(MONGO_URL);
 
 // no user needed locally but we need it for the prod environment 
 mongoose.connect(MONGO_URL, { useNewUrlParser: true });
@@ -10,7 +9,7 @@ const AnswerModel = mongoose.model("answer", {
 	email: {
 		type: String,
 		required: true,
-		//unique: true // TODO to be added
+		unique: true
 	},
 	emailHash: {
 		type: String,

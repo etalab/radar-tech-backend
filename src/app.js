@@ -19,8 +19,6 @@ const {
 	GraphQLBoolean
 } = require("graphql");
 
-console.log(process.env);
-
 const PORT = process.env.PORT || 3001;
 const HOST = process.env.HOST || '0.0.0.0';
 
@@ -31,9 +29,7 @@ const answerTypeGql = {
 	email: { type: GraphQLNonNull(GraphQLString) },
 	demo_age: { type: GraphQLString },
 	demo_genre: { type: GraphQLString },
-	education_formation: { type: GraphQLString },
-	confirm_email: { type: GraphQLBoolean, default: false},
-	email_sent: { type: GraphQLBoolean, default: false}
+	education_formation: { type: GraphQLString }
 }
 
 const AnswerType = new GraphQLObjectType({
@@ -113,7 +109,6 @@ app.get('/', (req, res) => {
 
 app.get('/confirmEmail', async (req, res) => {
 	let hash = req.query.hash;
-	console.log(`received hash is ${hash}`);
 	return await confirmEmail(hash)
 	.then(() => res.status(200).send('Merci, votre participation a été confirmée.'))
 	.catch(e => {
