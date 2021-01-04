@@ -68,9 +68,8 @@ $ dokku config:set fast-snow-hulu NPM_CONFIG_PRODUCTION=false
 ## Insert an answer
 ### Mutation
 ```
-mutation CreateAnswer ($email: String!, $age: String) {
-  	createAnswer(email: $email, demo_age: $age) {
-      demo_age,
+mutation CreateAnswer ($answer: AnswerInputType) {
+  	createAnswer($answer: answer$answer) {
       email
     }
   }
@@ -78,9 +77,10 @@ mutation CreateAnswer ($email: String!, $age: String) {
 ### Query Variables
 ```
 {
+  answer: {
   "email": "fgsfg@fdfdfs.fr",
   "age": "truc"
-}
+}}
 ```
 
 ## Insert Multiple Answers
