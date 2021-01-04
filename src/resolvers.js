@@ -29,7 +29,8 @@ const sendEmail = async (answer) => {
       }
     ],
     "subject":"Validation de votre participation au Radar Tech 2021",
-    "htmlContent":`<html><head></head><body><p>Cliquez sur <a href="${API_URL}/confirmEmail?hash=${answer.emailHash}">ce lien</a> pour valider votre participation au questionnaire.</p></body></html>`
+    "htmlContent":`<html><head></head><body><p>Cliquez sur <a href="${API_URL}/confirmEmail?hash=${answer.emailHash}">ce lien</a> pour valider votre participation au questionnaire.</p></body></html>`,
+    "textContent": `Cliquez sur ce lien : ${API_URL}/confirmEmail?hash=${answer.emailHash}, pour valider votre participation au questionnaire.`
   };
 
   return apiInstance.sendTransacEmail(body)
@@ -54,7 +55,7 @@ const postAnswer = async (answer) => {
   newAnswer["emailHash"] = hash;
 
   return AnswerModel.collection.insertOne(newAnswer)
-  .then(sendEmail(result["ops"][0]))
+  .then(result => sendEmail(result["ops"][0]))
   .then(() => newAnswer)
   .catch(err => {
     console.log(err);
