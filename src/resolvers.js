@@ -37,8 +37,8 @@ const sendEmail = async (answer) => {
   .then(updateEmailSent(hash, true))
   .then(() => answer)
   .catch(e => {
-    console.error(error.error);
-    return error.error;
+    console.error(e.error);
+    return e.error;
   });
 }
 
