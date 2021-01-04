@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "NODE_ENV=development DEBUG=express:* node src/app.js",
+    "debug": "NODE_ENV=development DEBUG=express:* node src/app.js",
+    "dev": "NODE_ENV=development node src/app.js",
     "start": "NODE_ENV=production node src/app.js"
   },
   "keywords": [],
