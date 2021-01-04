@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const MONGO_URL = process.env.MONGO_URL || 'mongodb://localhost:27017/radarTechDB';
 
 // no user needed locally but we need it for the prod environment 
-mongoose.connect(MONGO_URL, { useNewUrlParser: true });
+mongoose.connect(MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const AnswerModel = mongoose.model("answer", {
 	email: {
@@ -21,10 +21,12 @@ const AnswerModel = mongoose.model("answer", {
 	education_formation: String,
 	confirm_email: {
 		type: Boolean,
+		required: true,
 		default: false
 	},
 	email_sent: {
 		type: Boolean,
+		required: true,
 		default: false
 	}
 });

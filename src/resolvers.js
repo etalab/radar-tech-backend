@@ -51,8 +51,11 @@ const postAnswer = async (answer) => {
   newAnswer["salt"] = salt;
   newAnswer["emailHash"] = hash;
 
-  return AnswerModel.collection.insertOne(newAnswer)
-  .then(result => sendEmail(result["ops"][0]))
+  return AnswerModel.create(newAnswer)
+  .then(result => {
+    console.log(result);
+    sendEmail(result);
+  })
   .then(() => newAnswer)
   .catch(err => {
     console.log(err);

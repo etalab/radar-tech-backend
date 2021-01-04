@@ -10,8 +10,6 @@ const {
 	GraphQLID,
 	GraphQLString,
 	GraphQLList,
-	GraphQLType,
-	GraphQLInputType,
 	GraphQLSchema,
 	GraphQLNonNull,
 	GraphQLObjectType,
