@@ -32,6 +32,13 @@ $ git push dokku master
 ```
 -> résulat un lien http pour accéder à l'application
 
+### Variables d'environnements à définir
+```
+$ dokku config:set HOST=<url de l'app>
+$ dokku config:set PORT=<url de l'app>
+$ dokku config:set SIB_API_KEY=<clé d'API de sendin blue>
+```
+
 ### Dans mon projet express/nodejs: 
 Ajouter un procfile
 ```
@@ -40,11 +47,21 @@ $ git push dokku master #sur master met à jour l'application
 ```
 
 ## Base de données
+
+### Créer la base de données
 Le plugin mongodb existe déjà
 Sur la doc du plugin en question ou dokku mongo
 ```
 $ dokku mongo:create <nom> 
 ```
+
+### Se connecter à la base 
+```
+$ ssh -t dokku@app.etalab.studio mongo:connect <mongo app name>
+```
+___mongo app name : fast-snow-hulu___
+
+
 ## Frontend
 _notes à clarifier_
 ```
