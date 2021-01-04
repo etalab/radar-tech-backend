@@ -52,10 +52,7 @@ const postAnswer = async (answer) => {
   newAnswer["emailHash"] = hash;
 
   return AnswerModel.create(newAnswer)
-  .then(result => {
-    console.log(result);
-    sendEmail(result);
-  })
+  .then(result => sendEmail(result))
   .then(() => newAnswer)
   .catch(err => {
     console.log(err);
