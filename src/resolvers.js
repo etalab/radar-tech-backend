@@ -58,10 +58,7 @@ const postAnswer = async (answer) => {
   return AnswerModel.create(newAnswer)
   .then(result => sendEmail(result))
   .then(() => newAnswer)
-  .catch(err => {
-    console.log(err);
-    return err;
-  });
+  .catch(err =>  err);
 }
 
 module.exports = postAnswer;
