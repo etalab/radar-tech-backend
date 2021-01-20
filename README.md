@@ -7,7 +7,9 @@
 - mongodb
 
 # Développement
-
+```
+$ npm run dev
+```
 # DOKKU
 ## Backend
 1. Créer des variables d'environnement
@@ -147,6 +149,15 @@ Find All
 ```
 $ db.answers.find()
 ```
+Remove all (only for dev)
+```
+db.answers.remove( { } )
+```
 
+# Mettre à jour le modèle de données
+Mettre à jour le fichier questionnaire.js avec le nouveau questionnaire.
+Exécuter le script `./scripts/createSchema.js`.
+Les fichiers `./src/graphqlSchema.js` et `./src/mongoSchema.js` seront mis à jour
+  
 
 
