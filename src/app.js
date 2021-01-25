@@ -121,7 +121,7 @@ app.use(
 );
 
 // Listen
-const PORT = process.env.PORT || 5000;
-app.listen(process.env.PORT || 5000, () => {
-	console.log(`server is running at ${PORT}`);
+//const PORT = process.env.PORT || 5000;
+app.listen(3001, () => {
+	console.log(`server is running at 3001`);
 });
