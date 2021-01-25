@@ -24,7 +24,7 @@ const mongoSchema = {
     connaissance_db_expert: [String],
     containers_bool: String,
     containers_liste: String,
-    'containers_list-Comment': String,
+    //'containers_list-Comment': String,
     demo_administration: String,
     demo_age: String,
     demo_entree_admin: String,
@@ -56,7 +56,6 @@ const mongoSchema = {
     travail_activite_autre: [String],
     travail_bureau_domicile: String,
     demo_genre: String,
-    email: String,
 }; 
 
  module.exports = mongoSchema;
