@@ -84,6 +84,12 @@ $ dokku config:set fast-snow-hulu DOKKU_PROXY_PORT_MAP=http:80:5000
 $ dokku config:set fast-snow-hulu NPM_CONFIG_PRODUCTION=false
 ```
 
+## Logs
+Pour voir les logs 
+```
+$ dokku logs <nom_app> --tail
+```
+
 # GRAPHQL 
 ## Insert an answer
 ### Mutation
