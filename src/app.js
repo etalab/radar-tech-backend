@@ -17,9 +17,6 @@ const {
 	GraphQLBoolean
 } = require("graphql");
 
-const PORT = process.env.PORT || 5000;
-const HOST = process.env.HOST || '0.0.0.0';
-
 var app = Express();
 
 /*const answerTypeGql = {
