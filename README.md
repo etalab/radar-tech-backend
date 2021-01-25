@@ -54,7 +54,8 @@ $ git push dokku master #sur master met à jour l'application
 Le plugin mongodb existe déjà
 Sur la doc du plugin en question ou dokku mongo
 ```
-$ dokku mongo:create <nom> 
+$ dokku mongo:create <nom_service> 
+$ dokku mongo:link <nom_service> <nom_app>
 ```
 
 ### Se connecter à la base 
