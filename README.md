@@ -80,7 +80,7 @@ avec la lib os on peut récupérer ces variables
 $ dokku:ps inspect <app-name> #état de l'app 
 $ dokku ps:stop <app-name>
 $ dokku logs --tail
-$ dokku config:set fast-snow-hulu DOKKU_PROXY_PORT_MAP=http:80:5000
+$ dokku config:set fast-snow-hulu DOKKU_PROXY_PORT_MAP=http:80:3001
 $ dokku config:set fast-snow-hulu NPM_CONFIG_PRODUCTION=false
 ```
 
