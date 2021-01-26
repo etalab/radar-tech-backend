@@ -1,35 +1,11 @@
 const mongoose = require("mongoose");
-
+const mongoSchema = require("./mongoSchema.js");
 const MONGO_URL = process.env.MONGO_URL || 'mongodb://localhost:27017/radarTechDB';
 
 // no user needed locally but we need it for the prod environment 
 mongoose.connect(MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true });
 
-const AnswerModel = mongoose.model("answer", {
-	email: {
-		type: String,
-		required: true,
-		unique: true
-	},
-	emailHash: {
-		type: String,
-		required: true
-	},
-	salt: String,
-	demo_age: String,
-	demo_genre: String,
-	education_formation: String,
-	confirm_email: {
-		type: Boolean,
-		required: true,
-		default: false
-	},
-	email_sent: {
-		type: Boolean,
-		required: true,
-		default: false
-	}
-});
+const AnswerModel = mongoose.model("answer", mongoSchema);
 
 const confirmEmail = async (emailHash) => {
   // update confirm_email attribute
