@@ -19,9 +19,6 @@ const {
 } = require("graphql");
 const { formatError } = require('graphql/error');
 
-const PORT = process.env.PORT || 3001;
-const HOST = process.env.HOST || '0.0.0.0';
-
 var app = Express();
 
 /*const answerTypeGql = {
@@ -147,6 +144,7 @@ app.use(
 );
 
 // Listen
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
 	logger.info(`server is running at ${PORT}`);
 });

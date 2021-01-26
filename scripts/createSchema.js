@@ -1,6 +1,21 @@
 var questionnaire = require('./questionnaire.js')
 var fs = require('fs')
 
+// TYPE 
+/*
+const ARRAY_OF_STRING = (yup.array().of(yup.string()), [String])
+const STRING = (yup.string, String)
+const NUMBER = (yup.number, Number)
+
+education_formation: {
+​​
+ecole_inge: Object { selection: (1) […], filieres: "ddd" }
+​​
+uni_autres: Object { selection: (1) […], filieres: "ddd" }
+}
+
+*/
+
 let mongoSchemaStr = 'const mongoSchema = {\n' +
 ` email: {
     type: String,

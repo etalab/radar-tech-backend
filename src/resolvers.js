@@ -3,12 +3,14 @@ const { AnswerModel, confirmEmail, updateEmailSent } = require("./model.js");
 const logger = require('./logger.js');
 require('dotenv').config();
 
-const API_URL = process.env.API_URL;
+let API_URL = process.env.API_URL;
 if (API_URL === undefined) {
   const PORT = process.env.PORT || 3001;
   const HOST = process.env.HOST || 'http://localhost';
   API_URL = `${HOST}:${PORT}`;
 }
+
+console.log(`resolvers ${API_URL}`);
 
 
 const SibApiV3Sdk = require('sib-api-v3-sdk');

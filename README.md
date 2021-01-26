@@ -54,7 +54,8 @@ $ git push dokku master #sur master met à jour l'application
 Le plugin mongodb existe déjà
 Sur la doc du plugin en question ou dokku mongo
 ```
-$ dokku mongo:create <nom> 
+$ dokku mongo:create <nom_service> 
+$ dokku mongo:link <nom_service> <nom_app>
 ```
 
 ### Se connecter à la base 
@@ -79,8 +80,14 @@ avec la lib os on peut récupérer ces variables
 $ dokku:ps inspect <app-name> #état de l'app 
 $ dokku ps:stop <app-name>
 $ dokku logs --tail
-$ dokku config:set fast-snow-hulu DOKKU_PROXY_PORT_MAP=http:80:5000
+$ dokku config:set fast-snow-hulu DOKKU_PROXY_PORT_MAP=http:80:3001
 $ dokku config:set fast-snow-hulu NPM_CONFIG_PRODUCTION=false
+```
+
+## Logs
+Pour voir les logs 
+```
+$ dokku logs <nom_app> --tail
 ```
 
 # GRAPHQL 
