@@ -68,17 +68,17 @@ Note :
 - Pour pouvoir effectuer ces opérations sur le serveur Etalab il est nécessaire d'avoir partagé votre clé ssh à l'un des administrateurs.
 
 ## Variables d'environnement nécessaires : 
-```
-API_URL:               <à ajouter manuellement>
-DOKKU_APP_RESTORE:     1 // par défault
-DOKKU_APP_TYPE:        herokuish // par défault
-DOKKU_PROXY_PORT:      80 // par défault
-DOKKU_PROXY_PORT_MAP:  http:80:5000 // par défault
-GIT_REV:               99b3316454abea522684d6807294927579991faf // par défault
-MONGO_URL:             <ajouté automatiquement par dokku>
-```
 
-## Créer une base de données 
+- API_URL:               *à ajouter MANUELLEMENT*
+- DOKKU_APP_RESTORE:     1 __ajouté par Dokku__
+- DOKKU_APP_TYPE:        herokuish __ajouté par Dokku__
+- DOKKU_PROXY_PORT:      80 __ajouté par Dokku__
+- DOKKU_PROXY_PORT_MAP:  http:80:5000 __ajouté par Dokku__
+- GIT_REV:               99b3316454abea522684d6807294927579991faf __ajouté par Dokku__
+- MONGO_URL:             __ajouté par Dokku__
+
+
+## Créer une base de données avec Dokku
 1. Si ce n'est pas déjà fait, créer des variables d'environnement 
 ```
 $ export DOKKU_HOST='studio-01.infra.data.gouv.fr'
@@ -157,7 +157,7 @@ mutation CreateMultipleAnswer($answerList: [AnswerInput]) {
 ```
 
 # Mongo
-Voici une liste de commandes utiles pour Mongo :
+Voici une liste des commandes utiles pour administrer la base :
 ```
 $ use radarTechDB
 $ db.answers.find() // Afficher tous les docuements de la collection answers
