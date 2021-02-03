@@ -23,56 +23,49 @@ L'application est lancé sur le port 3001.
 ## Créer une application
 1. Cloner le dépot en local
 2. Ajouter un fichier Procfile (opt)
-
 __ce fichier est déjà disponible dans ce dépot__
-
 Le fichier contient la commande nécessaire pour lancer l'application : 
-```
-web: node src/app.js
-```
-Ajouter le fichier et enregistrer
-```
-$ git add Profile / git commit -m "add procfile"
-```
+    ```
+    web: node src/app.js
+    ```
+    Ajouter le fichier et enregistrer
+    ```
+    $ git add Profile / git commit -m "add procfile"
+    ```
 3. Créer des variables d'environnement
-```
-$ export DOKKU_HOST='studio-01.infra.data.gouv.fr'
-$ export DOKKU_PORT='22'
-```
+    ```
+    $ export DOKKU_HOST='studio-01.infra.data.gouv.fr'
+    $ export DOKKU_PORT='22'
+    ```
 4. Vérifier que les variables sont à jour :
-```
-$ env | grep DOKKU
-```
-4. Déployer l'application
-
-  a. Créer une nouvelle application
-  
-  A la racine du dossier du projet
-  ```
-  $ dokku apps:create <nom_app>`
-  ```
-  Un remote Dokku est ajouté pointant sur le dépôt distant
-  
+    ```
+    $ env | grep DOKKU
+    ```
+5. Déployer l'application
+a. Créer une nouvelle application
+A la racine du dossier du projet
+    ```
+    $ dokku apps:create <nom_app>`
+    ```
+    Un remote Dokku est ajouté pointant sur le dépôt distant
   b. Mettre a jour une application existante
-  
   Ajouter le dépôt dokku en local :
   `$ git remote add dokku dokku@studio-01.infra.data.gouv.fr:<nom_app>`
   
-5. Ajoute la variable d'environnement API_URL
-
+6. Ajoute la variable d'environnement API_URL
 C'est l'adresse du backend qui est utilisée dans le mail de confirmation de participation.
-```
-$ dokku config:set nom_app API_URL=http://<nom_app>.app.etalab.studio
-```
+    ```
+    $ dokku config:set nom_app API_URL=http://<nom_app>.app.etalab.studio
+    ```
 
-6. Pousser les modification locale
-```
-$ git push dokku master
-Ou 
-$ git push dokku <nom_branche>:master // pour pousser une autre branche
-```
+7. Pousser les modification locale
+    ```
+    $ git push dokku master
+    Ou 
+    $ git push dokku <nom_branche>:master // pour pousser une autre branche
+    ```
 
-Note : 
+Notes : 
 - /!\ Le client dokku en local infère le nom de l'application à partir du nom de remote.
 - Pour pouvoir effectuer ces opérations sur le serveur Etalab il est nécessaire d'avoir partagé votre clé ssh à l'un des administrateurs.
 
@@ -176,41 +169,36 @@ $ db.answers.remove( { } ) // Supprimer tous les docuements de la collection ans
 # Mettre à jour le modèle de données
 ## Manuellement
 1. ajouter un attribut dans le schéma mongo
-
-Dans le fichier `mongoSchema.js`, ajouter un attribut dans le dictionnaire `mongoSchema`
-
+Dans le fichier `mongoSchema.js`, ajouter un attribut dans le dictionnaire `mongoSchema`.
 Les types sont disponibles dans [la documentation Mongo](https://mongoosejs.com/docs/schematypes.html).
-
 Différentes clés peuvent être ajoutées, par exemple : 
-```
-confirm_email: {
-    type: String,
-    required: true,
-    default: false
-  }
-```
-
-Sachant que `containers_bool: String` est équivalent à `containers_bool: String`.
+    ```
+    confirm_email: {
+        type: String,
+        required: true,
+        default: false
+      }
+    ```
+    Sachant que `containers_bool: String` est équivalent à `containers_bool: String`.
 
 2. ajouter un attribut dans le schéma graphql
-
 Dans le fichier `graphqlSchema`, ajouter un attribut dans le dictionnaire `answerTypeGql` en suivant le format : 
-```
-NOM_ATTRIBUT: { type: <GRAPHQL_TYPE>}
-```
-Les types disponibles sont détaillés dans [la documentation de la librairie graphql-js](https://graphql.org/graphql-js/type/)
+    ```
+    NOM_ATTRIBUT: { type: <GRAPHQL_TYPE>}
+    ```
+    Les types disponibles sont détaillés dans [la documentation de la librairie graphql-js](https://graphql.org/graphql-js/type/)
+    
+    Le type doit être importé :
+    ```
+    const {
+        GraphQLID,
+      GraphQLNonNull,
+      GraphQLString,
+      GraphQLList,
+      GraphQLInt,
 
-Le type doit être importé :
-```
-const {
-	GraphQLID,
-  GraphQLNonNull,
-  GraphQLString,
-  GraphQLList,
-  GraphQLInt,
-
-} = require("graphql");
-```
+    } = require("graphql");
+    ```
 
 ## Avec un script 
 __cette section et le script sont en cours, ne pas en tenir compte__
