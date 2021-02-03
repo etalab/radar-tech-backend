@@ -26,9 +26,10 @@ L'application est lancé sur le port 3001.
 1. Cloner le dépot en local
 2. Ajouter un fichier Procfile (opt)
 
-__ce fichier est déjà disponible dans ce dépot__
+    __ce fichier est déjà disponible dans ce dépot__
+    
+    Le fichier contient la commande nécessaire pour lancer l'application : 
 
-Le fichier contient la commande nécessaire pour lancer l'application : 
     ```
     web: node src/app.js
     ```
@@ -51,18 +52,18 @@ Le fichier contient la commande nécessaire pour lancer l'application :
 
 5. Déployer l'application
 
-1. Créer une nouvelle application
-A la racine du dossier du projet
-```
-$ dokku apps:create <nom_app>`
-```
+    - Créer une nouvelle application
+    A la racine du dossier du projet
+    ```
+    $ dokku apps:create <nom_app>`
+    ```
 
-Un remote Dokku est ajouté pointant sur le dépôt distant
-2. Mettre a jour une application existante
-Ajouter le dépôt dokku en local :
-```
-$ git remote add dokku dokku@studio-01.infra.data.gouv.fr:<nom_app>
-```
+    Un remote Dokku est ajouté pointant sur le dépôt distant
+    - Mettre a jour une application existante
+    Ajouter le dépôt dokku en local :
+    ```
+    $ git remote add dokku dokku@studio-01.infra.data.gouv.fr:<nom_app>
+    ```
   
 6. Ajoute la variable d'environnement API_URL
 C'est l'adresse du backend qui est utilisée dans le mail de confirmation de participation.
