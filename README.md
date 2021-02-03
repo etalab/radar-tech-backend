@@ -1,97 +1,120 @@
 # Projet RadarTech
 ## Objectif 
-...
-## Pré-requis
+Nous proposons de consolider  un questionnaire  et de le soumettre aux milliers d'agents concernés via un site web dédié, puis de produire une page avec les des résultats obtenus. La DINUM ne souhaite par recourir à des outils de sondage classique car elle vise uneaccessibilité maximale et une expérience utilisateur propre à ce site, tant pour les questionsque pour la présentation des résultats.
+
+Le présent projet est le *backend* de l'application. Les frontend, développé en React avec Gatsby est disponible dans [un autre projet](https://github.com/etalab/radar-tech-frontend).
+## Outils Utilisés
 - graphql
 - nodejs
 - mongodb
 
+## Pré-requis
+- Node 14
+- npm 6
+
 # Développement
-```
-$ npm run dev
-```
+Ajouter les variables nécessaire en prenant exemple sur le fichier `.env.exemple` et en le renommant en `.env`.
+
+Lancer l'application : 
+`npm test`
+
+L'application est lancé sur le port 3001.
+[Un client graphql est disponible.](https://localhost:3001/graphql)
+
 # DOKKU
-## Backend
-1. Créer des variables d'environnement
+## Créer une application
+1. Cloner le dépot en local
+2. Ajouter un fichier Procfile (opt)
+
+    __ce fichier est déjà disponible dans ce dépot__
+    
+    Le fichier contient la commande nécessaire pour lancer l'application : 
+
+    ```
+    web: node src/app.js
+    ```
+
+    Ajouter et enregistrer le fichier :
+    ```
+    $ git add Profile / git commit -m "add procfile"
+    ```
+
+3. Créer des variables d'environnement
+    ```
+    $ export DOKKU_HOST='studio-01.infra.data.gouv.fr'
+    $ export DOKKU_PORT='22'
+    ```
+
+4. Vérifier que les variables sont à jour :
+    ```
+    $ env | grep DOKKU
+    ```
+
+5. Déployer l'application
+
+    - Créer une nouvelle application
+    A la racine du dossier du projet
+    ```
+    $ dokku apps:create <nom_app>`
+    ```
+
+    Un remote Dokku est ajouté pointant sur le dépôt distant
+    - Mettre a jour une application existante
+    Ajouter le dépôt dokku en local :
+    ```
+    $ git remote add dokku dokku@studio-01.infra.data.gouv.fr:<nom_app>
+    ```
+  
+6. Ajoute la variable d'environnement API_URL
+C'est l'adresse du backend qui est utilisée dans le mail de confirmation de participation.
+    ```
+    $ dokku config:set nom_app API_URL=http://<nom_app>.app.etalab.studio
+    ```
+
+7. Pousser les modification locale
+    ```
+    $ git push dokku master
+    Ou 
+    $ git push dokku <nom_branche>:master // pour pousser une autre branche
+    ```
+
+Notes : 
+- /!\ Le client dokku en local infère le nom de l'application à partir du nom de remote.
+- Pour pouvoir effectuer ces opérations sur le serveur Etalab il est nécessaire d'avoir partagé votre clé ssh à l'un des administrateurs.
+
+## Variables d'environnement nécessaires : 
+
+- API_URL:               *à ajouter MANUELLEMENT*
+- DOKKU_APP_RESTORE:     1 __ajouté par Dokku__
+- DOKKU_APP_TYPE:        herokuish __ajouté par Dokku__
+- DOKKU_PROXY_PORT:      80 __ajouté par Dokku__
+- DOKKU_PROXY_PORT_MAP:  http:80:5000 __ajouté par Dokku__
+- GIT_REV:               99b3316454abea522684d6807294927579991faf __ajouté par Dokku__
+- MONGO_URL:             __ajouté par Dokku__
+
+
+## Créer une base de données avec Dokku
+1. Si ce n'est pas déjà fait, créer des variables d'environnement 
 ```
 $ export DOKKU_HOST='studio-01.infra.data.gouv.fr'
 $ export DOKKU_PORT='22'
-$ export DOKKU_GIT_REMOTE='dokku'
 ```
-Vérifier que les variables sont à jour :
+2. Créer le service avec Dokku
 ```
-$ env | grep DOKKU
+$ dokku mongo:add <db_name>
 ```
-
-2. Cloner le repo en local
-3. dans le dossier du repo lancer 
+3. Lier la base avec l'application
 ```
-$ dokku apps:create
+$ dokku mongo:link <db_name> <app_namme>
 ```
-4. Pousser la branche principale
-```
-$ git push dokku master
-```
--> résulat un lien http pour accéder à l'application
-
-### Variables d'environnements à définir
-```
-$ dokku config:set HOST=<url de l'app>
-$ dokku config:set PORT=<url de l'app>
-$ dokku config:set SIB_API_KEY=<clé d'API de sendin blue>
-```
-
-### Dans mon projet express/nodejs: 
-Ajouter un procfile
-```
-$ git add / git commit
-$ git push dokku master #sur master met à jour l'application
-```
-
-## Base de données
-
-### Créer la base de données
-Le plugin mongodb existe déjà
-Sur la doc du plugin en question ou dokku mongo
-```
-$ dokku mongo:create <nom_service> 
-$ dokku mongo:link <nom_service> <nom_app>
-```
-
-### Se connecter à la base 
-```
-$ ssh -t dokku@app.etalab.studio mongo:connect <mongo app name>
-```
-___mongo app name : fast-snow-hulu___
-
-
-## Frontend
-_notes à clarifier_
-```
-$ dokku config #liste les variables enregistrées 
-$ dokku config:set VARIABLE_NAME=VALUE
-```
-quand on configure une nouvelle variable il redemmare l'app
-On va créer une variable pour configurer la communication avec le back
-faire le lien entre les deux conteneurs
-avec la lib os on peut récupérer ces variables
-
-```
-$ dokku:ps inspect <app-name> #état de l'app 
-$ dokku ps:stop <app-name>
-$ dokku logs --tail
-$ dokku config:set fast-snow-hulu DOKKU_PROXY_PORT_MAP=http:80:3001
-$ dokku config:set fast-snow-hulu NPM_CONFIG_PRODUCTION=false
-```
+Ajoute automatiquement la variable __MONGO_URL__ dans les variables d'environnement dokku.
 
 ## Logs
-Pour voir les logs 
-```
-$ dokku logs <nom_app> --tail
-```
+Pour voir les logs : `$ dokku logs <nom_app> --tail`
 
 # GRAPHQL 
-## Insert an answer
+Les requêtes suivantes sont celles autorisées actuellement
+## Ajouter une réponse
 ### Mutation
 ```
 mutation CreateAnswer ($answer: AnswerInput) {
@@ -100,7 +123,7 @@ mutation CreateAnswer ($answer: AnswerInput) {
     }
   }
 ```
-### Query Variables
+### Variable
 ```
 {
   "answer": {
@@ -110,7 +133,7 @@ mutation CreateAnswer ($answer: AnswerInput) {
 }
 ```
 
-## Insert Multiple Answers
+## Ajouter plusieurs réponses
 ### Mutation
 ```
 mutation CreateMultipleAnswer($answerList: [AnswerInput]) {
@@ -120,7 +143,7 @@ mutation CreateMultipleAnswer($answerList: [AnswerInput]) {
   }
 }
 ```
-### Query Variables
+### Variable
 ```
 {
   "answerList": [
@@ -136,7 +159,7 @@ mutation CreateMultipleAnswer($answerList: [AnswerInput]) {
 }
 ```
 
-## Get 
+## Accèder aux réponses 
 ```
 {
   answer {
@@ -149,22 +172,51 @@ mutation CreateMultipleAnswer($answerList: [AnswerInput]) {
 ```
 
 # Mongo
+Voici une liste des commandes utiles pour administrer la base :
 ```
 $ use radarTechDB
-```
-Find All 
-```
-$ db.answers.find()
-```
-Remove all (only for dev)
-```
-db.answers.remove( { } )
+$ db.answers.find() // Afficher tous les docuements de la collection answers
+$ db.answers.remove( { } ) // Supprimer tous les docuements de la collection answers
 ```
 
 # Mettre à jour le modèle de données
+## Manuellement
+1. ajouter un attribut dans le schéma mongo
+Dans le fichier `mongoSchema.js`, ajouter un attribut dans le dictionnaire `mongoSchema`.
+Les types sont disponibles dans [la documentation Mongo](https://mongoosejs.com/docs/schematypes.html).
+Différentes clés peuvent être ajoutées, par exemple : 
+    ```
+    confirm_email: {
+        type: String,
+        required: true,
+        default: false
+      }
+    ```
+    Sachant que `containers_bool: String` est équivalent à `containers_bool: String`.
+
+2. ajouter un attribut dans le schéma graphql
+Dans le fichier `graphqlSchema`, ajouter un attribut dans le dictionnaire `answerTypeGql` en suivant le format : 
+    ```
+    NOM_ATTRIBUT: { type: <GRAPHQL_TYPE>}
+    ```
+    Les types disponibles sont détaillés dans [la documentation de la librairie graphql-js](https://graphql.org/graphql-js/type/)
+    
+    Le type doit être importé :
+    ```
+    const {
+        GraphQLID,
+      GraphQLNonNull,
+      GraphQLString,
+      GraphQLList,
+      GraphQLInt,
+
+    } = require("graphql");
+    ```
+
+## Avec un script 
+__cette section et le script sont en cours, ne pas en tenir compte__
 Mettre à jour le fichier questionnaire.js avec le nouveau questionnaire.
+
 Exécuter le script `./scripts/createSchema.js`.
-Les fichiers `./src/graphqlSchema.js` et `./src/mongoSchema.js` seront mis à jour
-  
 
-
+Les fichiers `./src/graphqlSchema.js` et `./src/mongoSchema.js` seront mis à jour.
