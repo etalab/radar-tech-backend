@@ -50,6 +50,7 @@ Le fichier contient la commande nécessaire pour lancer l'application :
     ```
 
 5. Déployer l'application
+
   a. Créer une nouvelle application
   A la racine du dossier du projet
   ```
