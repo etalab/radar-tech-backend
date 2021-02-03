@@ -20,34 +20,48 @@ L'application est lancé sur le port 3001.
 [Un client graphql est disponible.](https://localhost:3001/graphql)
 
 # DOKKU
-## Créer ou mettre à jour une application
-1. Ajouter un fichier Procfile
+## Créer une application
+1. Cloner le dépot en local
+2. Ajouter un fichier Procfile (opt)
+__ce fichier est déjà disponible dans ce dépot__
 Le fichier contient la commande nécessaire pour lancer l'application : 
-`web: node src/app.js`
+```
+web: node src/app.js
+```
 Ajouter le fichier et enregistrer
-`$ git add Profile / git commit -m "add procfile"`
+```
+$ git add Profile / git commit -m "add procfile"
+```
 3. Créer des variables d'environnement
-`$ export DOKKU_HOST='studio-01.infra.data.gouv.fr'`
-`$ export DOKKU_PORT='22'`
-2. Vérifier que les variables sont à jour :
-`$ env | grep DOKKU`
-3. Cloner le repo en local
+```
+$ export DOKKU_HOST='studio-01.infra.data.gouv.fr'
+$ export DOKKU_PORT='22'
+```
+4. Vérifier que les variables sont à jour :
+```
+$ env | grep DOKKU
+```
 4. Déployer l'application
-    a. Créer une nouvelle app
-    Créer l'application dans le dossier du projet :
-    `$ dokku apps:create <nom_app>`
-    un remote Dokku est ajouté pointant sur le dépôt distant
-    b. Mettre a jour une application existante
-    Ajouter le dépôt dokku en local :
-    `$ git remote add dokku dokku@studio-01.infra.data.gouv.fr:<nom_app>`
-
+  a. Créer une nouvelle application
+  A la racine du dossier du projet
+  ```
+  $ dokku apps:create <nom_app>`
+  ```
+  Un remote Dokku est ajouté pointant sur le dépôt distant
+  b. Mettre a jour une application existante
+  Ajouter le dépôt dokku en local :
+  `$ git remote add dokku dokku@studio-01.infra.data.gouv.fr:<nom_app>`
 5. Ajoute la variable d'environnement API_URL
-`$ dokku config:set <app_name> API_URL=<app_url>`
-5. Pousser la branche
-`$ git push dokku master`
+C'est l'adresse du backend qui est utilisée dans le mail de confirmation de participation.
+```
+$ dokku config:set nom_app API_URL=http://<nom_app>.app.etalab.studio
+```
+6. Pousser les modification locale
+```
+$ git push dokku master
 Ou 
-`$ git push dokku <nom_branche>:master` pour pousser une autre branche
--> résulat : un lien http pour accéder à l'application
+$ git push dokku <nom_branche>:master // pour pousser une autre branche
+```
 
 Note : 
 - /!\ Le client dokku en local infère le nom de l'application à partir du nom de remote.
@@ -65,9 +79,19 @@ MONGO_URL:             <ajouté automatiquement par dokku>
 ```
 
 ## Créer une base de données 
-`$ dokku mongo:add <db_name>`
-Lié à l'application
-`$ dokku mongo:link <db_name> <app_namme>`
+1. Si ce n'est pas déjà fait, créer des variables d'environnement 
+```
+$ export DOKKU_HOST='studio-01.infra.data.gouv.fr'
+$ export DOKKU_PORT='22'
+```
+2. Créer le service avec Dokku
+```
+$ dokku mongo:add <db_name>
+```
+3. Lier la base avec l'application
+```
+$ dokku mongo:link <db_name> <app_namme>
+```
 Ajoute automatiquement la variable __MONGO_URL__ dans les variables d'environnement dokku.
 
 ## Logs
@@ -133,13 +157,48 @@ mutation CreateMultipleAnswer($answerList: [AnswerInput]) {
 ```
 
 # Mongo
-`$ use radarTechDB`
-Find All 
-`$ db.answers.find()`
-Remove all (only for dev)
-`$ db.answers.remove( { } )`
+Voici une liste de commandes utiles pour Mongo :
+```
+$ use radarTechDB
+$ db.answers.find() // Afficher tous les docuements de la collection answers
+$ db.answers.remove( { } ) // Supprimer tous les docuements de la collection answers
+```
 
 # Mettre à jour le modèle de données
+## Manuellement
+1. ajouter un attribut dans le schéma mongo
+Dans le fichier `mongoSchema.js`, ajouter un attribut dans le dictionnaire `mongoSchema`
+Les types sont disponibles dans [la documentation Mongo](https://mongoosejs.com/docs/schematypes.html).
+Différentes clés peuvent être ajoutées, par exemple : 
+```
+confirm_email: {
+    type: String,
+    required: true,
+    default: false
+  }
+```
+Sachant que `containers_bool: String` est équivalent à `containers_bool: String`.
+
+2. ajouter un attribut dans le schéma graphql
+
+Dans le fichier `graphqlSchema`, ajouter un attribut dans le dictionnaire `answerTypeGql` en suivant le format : 
+```
+NOM_ATTRIBUT: { type: <GRAPHQL_TYPE>}
+```
+Les types disponibles sont détaillés dans [la documentation de la librairie graphql-js](https://graphql.org/graphql-js/type/)
+Le type doit être importé
+```
+const {
+	GraphQLID,
+  GraphQLNonNull,
+  GraphQLString,
+  GraphQLList,
+  GraphQLInt,
+
+} = require("graphql");
+```
+## Avec un script 
+__cette section et le script sont en cours, ne pas en tenir compte__
 Mettre à jour le fichier questionnaire.js avec le nouveau questionnaire.
 Exécuter le script `./scripts/createSchema.js`.
 Les fichiers `./src/graphqlSchema.js` et `./src/mongoSchema.js` seront mis à jour.
