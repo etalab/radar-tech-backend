@@ -23,7 +23,9 @@ L'application est lancé sur le port 3001.
 ## Créer une application
 1. Cloner le dépot en local
 2. Ajouter un fichier Procfile (opt)
+
 __ce fichier est déjà disponible dans ce dépot__
+
 Le fichier contient la commande nécessaire pour lancer l'application : 
 ```
 web: node src/app.js
@@ -42,20 +44,27 @@ $ export DOKKU_PORT='22'
 $ env | grep DOKKU
 ```
 4. Déployer l'application
+
   a. Créer une nouvelle application
+  
   A la racine du dossier du projet
   ```
   $ dokku apps:create <nom_app>`
   ```
   Un remote Dokku est ajouté pointant sur le dépôt distant
+  
   b. Mettre a jour une application existante
+  
   Ajouter le dépôt dokku en local :
   `$ git remote add dokku dokku@studio-01.infra.data.gouv.fr:<nom_app>`
+  
 5. Ajoute la variable d'environnement API_URL
+
 C'est l'adresse du backend qui est utilisée dans le mail de confirmation de participation.
 ```
 $ dokku config:set nom_app API_URL=http://<nom_app>.app.etalab.studio
 ```
+
 6. Pousser les modification locale
 ```
 $ git push dokku master
@@ -167,8 +176,11 @@ $ db.answers.remove( { } ) // Supprimer tous les docuements de la collection ans
 # Mettre à jour le modèle de données
 ## Manuellement
 1. ajouter un attribut dans le schéma mongo
+
 Dans le fichier `mongoSchema.js`, ajouter un attribut dans le dictionnaire `mongoSchema`
+
 Les types sont disponibles dans [la documentation Mongo](https://mongoosejs.com/docs/schematypes.html).
+
 Différentes clés peuvent être ajoutées, par exemple : 
 ```
 confirm_email: {
@@ -177,6 +189,7 @@ confirm_email: {
     default: false
   }
 ```
+
 Sachant que `containers_bool: String` est équivalent à `containers_bool: String`.
 
 2. ajouter un attribut dans le schéma graphql
@@ -186,7 +199,8 @@ Dans le fichier `graphqlSchema`, ajouter un attribut dans le dictionnaire `answe
 NOM_ATTRIBUT: { type: <GRAPHQL_TYPE>}
 ```
 Les types disponibles sont détaillés dans [la documentation de la librairie graphql-js](https://graphql.org/graphql-js/type/)
-Le type doit être importé
+
+Le type doit être importé :
 ```
 const {
 	GraphQLID,
@@ -197,8 +211,11 @@ const {
 
 } = require("graphql");
 ```
+
 ## Avec un script 
 __cette section et le script sont en cours, ne pas en tenir compte__
 Mettre à jour le fichier questionnaire.js avec le nouveau questionnaire.
+
 Exécuter le script `./scripts/createSchema.js`.
+
 Les fichiers `./src/graphqlSchema.js` et `./src/mongoSchema.js` seront mis à jour.
