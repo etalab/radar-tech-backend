@@ -32,29 +32,36 @@ Le fichier contient la commande nécessaire pour lancer l'application :
     ```
     web: node src/app.js
     ```
-    Ajouter le fichier et enregistrer
+
+    Ajouter et enregistrer le fichier :
     ```
     $ git add Profile / git commit -m "add procfile"
     ```
+
 3. Créer des variables d'environnement
     ```
     $ export DOKKU_HOST='studio-01.infra.data.gouv.fr'
     $ export DOKKU_PORT='22'
     ```
+
 4. Vérifier que les variables sont à jour :
     ```
     $ env | grep DOKKU
     ```
+
 5. Déployer l'application
 a. Créer une nouvelle application
 A la racine du dossier du projet
     ```
     $ dokku apps:create <nom_app>`
     ```
+
     Un remote Dokku est ajouté pointant sur le dépôt distant
   b. Mettre a jour une application existante
   Ajouter le dépôt dokku en local :
-  `$ git remote add dokku dokku@studio-01.infra.data.gouv.fr:<nom_app>`
+  ````
+  $ git remote add dokku dokku@studio-01.infra.data.gouv.fr:<nom_app>
+  ```
   
 6. Ajoute la variable d'environnement API_URL
 C'est l'adresse du backend qui est utilisée dans le mail de confirmation de participation.
