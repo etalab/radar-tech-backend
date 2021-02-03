@@ -14,8 +14,10 @@ Le présent projet est le *backend* de l'application. Les frontend, développé 
 
 # Développement
 Ajouter les variables nécessaire en prenant exemple sur le fichier `.env.exemple` et en le renommant en `.env`.
+
 Lancer l'application : 
 `npm test`
+
 L'application est lancé sur le port 3001.
 [Un client graphql est disponible.](https://localhost:3001/graphql)
 
@@ -23,7 +25,9 @@ L'application est lancé sur le port 3001.
 ## Créer une application
 1. Cloner le dépot en local
 2. Ajouter un fichier Procfile (opt)
+
 __ce fichier est déjà disponible dans ce dépot__
+
 Le fichier contient la commande nécessaire pour lancer l'application : 
     ```
     web: node src/app.js
