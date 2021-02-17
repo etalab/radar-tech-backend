@@ -1,25 +1,13 @@
-const userModel = {
-  id: {
-    field: 'id',
-    type: dataTypes.INTEGER,
-    allowNull: false,
-    primaryKey: true,
-    autoIncrement: true
-  },
+const userSchema = {
   username: {
-    field: 'username',
+    type: String,
     unique: true,
-    type: dataTypes.STRING,
-    allowNull: true
+    required: true
   },
-  password: {
-    field: 'password',
-    type: dataTypes.STRING,
-    allowNull: false
-  },
-  salt: {
-    field: 'salt',
-    type: dataTypes.STRING,
-    allowNull: true
-  },
+  role: {
+    type: String,
+    required: true
+  }
 };
+
+module.exports = userSchema;

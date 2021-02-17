@@ -2,11 +2,13 @@ const Express = require("express");
 const { graphqlHTTP } = require('express-graphql'); 
 const cors = require("cors");
 const bodyParser = require("body-parser");
+
 const postAnswer = require("./resolvers.js");
 const { AnswerModel, confirmEmail } = require("./db/model.js");
 const logger = require('./logger.js');
 const httpLogger = require('./middlewares.js');
 const answerTypeGql = require("./graphqlSchema.js");
+const auth = require("./middlewares/auth.js");
 require('dotenv').config();
 
 const {
@@ -108,6 +110,10 @@ const schema = new GraphQLSchema({
 		}
 	})
 });
+
+// Auth middleware to securize API access
+// Only for production
+app.use(auth);
 
 // Http Logger middleware: it will log all incoming HTTP requests information
 app.use(httpLogger);

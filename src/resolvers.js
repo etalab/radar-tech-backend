@@ -1,5 +1,5 @@
 const crypto = require("crypto");
-const { AnswerModel, confirmEmail, updateEmailSent } = require("./model.js");
+const { AnswerModel, confirmEmail, updateEmailSent } = require("./db/model.js");
 const logger = require('./logger.js');
 require('dotenv').config();
 

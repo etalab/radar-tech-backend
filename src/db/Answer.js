@@ -1,4 +1,4 @@
-const answerModel = {
+const answerSchema = {
   email: {
      type: String,
      required: true,
@@ -58,4 +58,4 @@ const answerModel = {
      demo_genre: String,
  }; 
  
-  module.exports = answerModel;
+  module.exports = answerSchema;
