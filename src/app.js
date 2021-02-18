@@ -23,14 +23,6 @@ const { formatError } = require('graphql/error');
 
 var app = Express();
 
-/*const answerTypeGql = {
-	id: { type: GraphQLID },
-	email: { type: GraphQLNonNull(GraphQLString) },
-	demo_age: { type: GraphQLString },
-	demo_genre: { type: GraphQLString },
-	education_formation: { type: GraphQLString }
-}*/
-
 const AnswerType = new GraphQLObjectType({
 	name: "Answer",
 	fields: answerTypeGql
