@@ -1,6 +1,6 @@
 const crypto = require("crypto");
-const { AnswerModel, confirmEmail, updateEmailSent } = require("./db/model.js");
-const logger = require('./logger.js');
+const { AnswerModel, updateEmailSent } = require("./db/model.js");
+const logger = require('./middlewares/logger.js');
 require('dotenv').config();
 
 let API_URL = process.env.API_URL;
@@ -9,9 +9,6 @@ if (API_URL === undefined) {
   const HOST = process.env.HOST || 'http://localhost';
   API_URL = `${HOST}:${PORT}`;
 }
-
-console.log(`resolvers ${API_URL}`);
-
 
 const SibApiV3Sdk = require('sib-api-v3-sdk');
 const defaultClient = SibApiV3Sdk.ApiClient.instance;
