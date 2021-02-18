@@ -2,7 +2,6 @@ const { AnswerModel } = require("./db/model.js");
 const postAnswer = require("./resolvers.js");
 const { logger } = require("./middlewares/logger.js")
 
-console.log(logger);
 const {
 	GraphQLID,
   GraphQLNonNull,
