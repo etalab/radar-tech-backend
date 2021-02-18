@@ -4,6 +4,7 @@
 const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
 const { UserModel } = require('../db/model.js');
+require('dotenv').config();
 
 const jwtVerify = promisify(jwt.verify);
 
