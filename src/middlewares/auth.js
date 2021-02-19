@@ -14,10 +14,6 @@ const tokenAlgo = process.env.ACCESS_TOKEN_ALGORITHM;
 
 module.exports = async (req, res, next) => {
   try {
-    if (req.baseUrl !== '/graphql') {
-      // other route doesn't need authentification ?
-      next();
-    }
     const { headers } = req;
 
     if (!headers.authorization) {
@@ -47,6 +43,7 @@ module.exports = async (req, res, next) => {
     if (user === undefined || user.length === 0) {
       throw new Error(`User ${username} doesn't exist`);
     }
+    return next();
   } catch (err) {
     res.status(401).json({
       error: 'Invalid Token'
