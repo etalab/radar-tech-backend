@@ -180,11 +180,11 @@ $ db.answers.remove( { } ) // Supprimer tous les docuements de la collection ans
 ```
 
 # Authentification
-1. coper le fichier ./script/.env.example et le renommer en .env
-1. remplir la valeur MONGO_URL dans le fichier .env
+1. Copier le fichier ./script/.env.example et le renommer en .env
+1. Remplir la valeur MONGO_URL dans le fichier .env
 2. Remplir la valeur de ACCESS_TOKEN_SECRET avec celle du serveur (dokku)
-3. lancer le script __createAccessToken__ avec le nom de l'utilisateur et son rôle 
-Rôle accepté : ["frontend", "dev"]
+3. Lancer le script __createAccessToken__ avec le nom de l'utilisateur et son rôle 
+Rôles acceptés : ["frontend", "dev"]
 ```
 node createAccessToken.js <username> <usertoken>
 ```

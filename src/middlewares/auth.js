@@ -45,7 +45,6 @@ module.exports = async (req, res, next) => {
     /** Check that a user with this userId exists */
     const user = await UserModel.find({_id: id, username, role});
     if (user === undefined || user.length === 0) {
-      // use BadCredentialsError
       throw new Error(`User ${username} doesn't exist`);
     }
   } catch (err) {

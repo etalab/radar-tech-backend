@@ -12,7 +12,6 @@ require('dotenv').config();
 var app = Express();
 
 // Auth middleware to securize API access
-// Only for production
 app.use(auth);
 
 // Http Logger middleware: it will log all incoming HTTP requests information
