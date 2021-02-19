@@ -11,9 +11,6 @@ require('dotenv').config();
 
 var app = Express();
 
-// Auth middleware to securize API access
-app.use(auth);
-
 // Http Logger middleware: it will log all incoming HTTP requests information
 app.use(httpLogger);
 
@@ -21,6 +18,19 @@ app.use(cors())
 //Here we are configuring express to use body-parser as middle-ware.
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+app.use(
+	'/graphql',
+	auth,
+  graphqlHTTP({
+    schema: graphqlSchema,
+		graphiql: true,
+		customFormatErrorFn: (err) => {
+			logger.error(JSON.stringify({"message": err.message, "location": err.location, "path": err.path}));
+			return formatError(err);
+		}
+  }),
+);
 
 app.get('/', (_, res) => {
   res.send('Hello, Dokku!');
@@ -35,18 +45,6 @@ app.get('/confirmEmail', async (req, res) => {
 		return res.status(500).end();
 	})
 });
-
-app.use(
-  '/graphql',
-  graphqlHTTP({
-    schema: graphqlSchema,
-		graphiql: true,
-		customFormatErrorFn: (err) => {
-			logger.error(JSON.stringify({"message": err.message, "location": err.location, "path": err.path}));
-			return formatError(err);
-		}
-  }),
-);
 
 // Listen
 const PORT = process.env.PORT || 3001;
