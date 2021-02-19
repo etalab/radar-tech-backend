@@ -1,6 +1,6 @@
 const crypto = require("crypto");
 const { AnswerModel, updateEmailSent } = require("./db/model.js");
-const logger = require('./middlewares/logger.js');
+const { logger } = require('./middlewares/logger.js');
 require('dotenv').config();
 
 let API_URL = process.env.API_URL;
