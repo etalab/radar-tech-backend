@@ -1,16 +1,16 @@
-var questionnaire = require('./questionnaire.js')
-var fs = require('fs')
+const questionnaire = require('./questionnaire.js')
+const fs = require('fs')
 
-// TYPE 
+// TYPE
 /*
 const ARRAY_OF_STRING = (yup.array().of(yup.string()), [String])
 const STRING = (yup.string, String)
 const NUMBER = (yup.number, Number)
 
 education_formation: {
-​​
+
 ecole_inge: Object { selection: (1) […], filieres: "ddd" }
-​​
+
 uni_autres: Object { selection: (1) […], filieres: "ddd" }
 }
 
@@ -36,43 +36,43 @@ let mongoSchemaStr = 'const mongoSchema = {\n' +
     type: String,
     required: true,
     default: false
-  }, \n`;
+  }, \n`
 
 let answerTypeGqlStr = `
 const {
-	GraphQLID,
+  GraphQLID,
   GraphQLNonNull,
   GraphQLString,
 } = require("graphql");
 
 const answerTypeGql = {
   id: { type: GraphQLID },
-  email: { type: GraphQLNonNull(GraphQLString) },\n`;
+  email: { type: GraphQLNonNull(GraphQLString) },\n`
 
-const pages = questionnaire.pages;
+const pages = questionnaire.pages
 pages.forEach(page => {
-	page.elements.forEach(element => {
-    const attributName = element["name"];
-    if (element["isReqired"] !== undefined && element["isReqired"] == true) {
+  page.elements.forEach(element => {
+    const attributName = element.name
+    if (element.isReqired !== undefined && element.isReqired === true) {
       mongoSchemaStr += `  ${attributName}: {
-				  type: String,
-				  required: true
+          type: String,
+          required: true
         }, 
-      \n`;
-      answerTypeGqlStr += ` ${attributName}: { type: GraphQLNonNull(GraphQLString) }, \n`;
-		} else {
-      mongoSchemaStr += `  ${attributName}: String, \n`;
+      \n`
+      answerTypeGqlStr += ` ${attributName}: { type: GraphQLNonNull(GraphQLString) }, \n`
+    } else {
+      mongoSchemaStr += `  ${attributName}: String, \n`
       answerTypeGqlStr += `  ${attributName}: { type: GraphQLString }, \n`
-		}
-  });
-});
+    }
+  })
+})
 
 fs.writeFile('./src/mongoSchema.js', mongoSchemaStr + '}; \n\n module.exports = mongoSchema;', (err) => {
-  if (err) throw err;
-  console.log('mongoSchema.js has been saved!');
-});
+  if (err) throw err
+  console.log('mongoSchema.js has been saved!')
+})
 
 fs.writeFile('./src/graphqlSchema.js', answerTypeGqlStr + '}; \n\n module.exports = answerTypeGql;', (err) => {
-  if (err) throw err;
-  console.log('graphqlSchema.js has been saved!');
-});
+  if (err) throw err
+  console.log('graphqlSchema.js has been saved!')
+})
