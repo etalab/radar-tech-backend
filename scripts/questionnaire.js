@@ -577,6 +577,6 @@ const questionnaire = {
     // },
   ],
   showQuestionNumbers: 'off',
-};
+}
 
-module.exports = questionnaire;
+module.exports = questionnaire
