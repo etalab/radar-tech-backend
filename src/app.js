@@ -2,112 +2,14 @@ const Express = require("express");
 const { graphqlHTTP } = require('express-graphql'); 
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const postAnswer = require("./resolvers.js");
-const { AnswerModel, confirmEmail } = require("./model.js");
-const logger = require('./logger.js');
-const httpLogger = require('./middlewares.js');
-const answerTypeGql = require("./graphqlSchema.js");
+const { formatError } = require('graphql/error');
+const { confirmEmail } = require("./db/model.js");
+const {httpLogger, logger } = require('./middlewares/logger.js');
+const auth = require("./middlewares/auth.js");
+const graphqlSchema = require("./graphqlSchema.js")
 require('dotenv').config();
 
-const {
-	GraphQLID,
-	GraphQLList,
-	GraphQLSchema,
-	GraphQLNonNull,
-	GraphQLObjectType,
-	GraphQLInputObjectType
-} = require("graphql");
-const { formatError } = require('graphql/error');
-
 var app = Express();
-
-/*const answerTypeGql = {
-	id: { type: GraphQLID },
-	email: { type: GraphQLNonNull(GraphQLString) },
-	demo_age: { type: GraphQLString },
-	demo_genre: { type: GraphQLString },
-	education_formation: { type: GraphQLString }
-}*/
-
-const AnswerType = new GraphQLObjectType({
-	name: "Answer",
-	fields: answerTypeGql
-});
-
-const AnswerInputType = new GraphQLInputObjectType({
-	name: "AnswerInput",
-	fields: answerTypeGql
-});
-
-const schema = new GraphQLSchema({
-	query: new GraphQLObjectType({
-		name: "Query",
-		fields: {
-			// get answer list stored id db
-			answer: {
-				type: GraphQLList(AnswerType),
-				resolve: (root, args, context, info) => {
-					return AnswerModel.find().exec()
-					.then(res => res)
-					.catch(err => {
-						logger.error(`An error occured in answer querry ${err}`);
-						return err;
-					});
-				}
-			},
-			// get an answer by id
-			answerByID: {
-				type: AnswerType,
-				args: {
-					// strong validation for graphqlid, which is mendatory for running this query
-					id: { type: GraphQLNonNull(GraphQLID) }
-				},
-				resolve: (root, args, context, info) => {
-					return AnswerModel.findById(args.id).exec()
-					.then(res => res)
-					.catch(err => {
-						logger.error(`An error occured in answerByID querry ${err}`);
-						return err;
-					});
-				}
-			},
-		}
-	}),
-	// Create Mutation
-	mutation: new GraphQLObjectType({
-		name: "Mutation",
-		fields: {
-			createAnswer: {
-				type: AnswerType,
-				args: {
-					answer: { type: (AnswerInputType) }
-				},
-				resolve: async (root, args, context, info) => {
-					return postAnswer(args["answer"])
-					.then(newAnswer => newAnswer)
-					.catch(err => {
-						logger.error(`An error occured in createAnswer mutation ${err}`);
-						return err;
-					});
-				}
-			},
-			createMultipleAnswer: {
-				type: GraphQLList(AnswerType),
-				args: {
-					answerList: { type: GraphQLList(AnswerInputType) }
-				},
-				resolve: async (root, args, context, info) => {
-					return await AnswerModel.collection.insertMany(args["answerList"])
-					.then(res => res["ops"])
-					.catch(err => {
-						logger.error(err);
-						return err;
-					});
-				}
-			}
-		}
-	})
-});
 
 // Http Logger middleware: it will log all incoming HTTP requests information
 app.use(httpLogger);
@@ -116,6 +18,19 @@ app.use(cors())
 //Here we are configuring express to use body-parser as middle-ware.
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+app.use(
+	'/graphql',
+	auth,
+  graphqlHTTP({
+    schema: graphqlSchema,
+		graphiql: true,
+		customFormatErrorFn: (err) => {
+			logger.error(JSON.stringify({"message": err.message, "location": err.location, "path": err.path}));
+			return formatError(err);
+		}
+  }),
+);
 
 app.get('/', (_, res) => {
   res.send('Hello, Dokku!');
@@ -130,18 +45,6 @@ app.get('/confirmEmail', async (req, res) => {
 		return res.status(500).end();
 	})
 });
-
-app.use(
-  '/graphql',
-  graphqlHTTP({
-    schema: schema,
-		graphiql: true,
-		customFormatErrorFn: (err) => {
-			logger.error(JSON.stringify({"message": err.message, "location": err.location, "path": err.path}));
-			return formatError(err);
-		}
-  }),
-);
 
 // Listen
 const PORT = process.env.PORT || 3001;

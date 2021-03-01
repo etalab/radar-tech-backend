@@ -179,6 +179,16 @@ $ db.answers.find() // Afficher tous les docuements de la collection answers
 $ db.answers.remove( { } ) // Supprimer tous les docuements de la collection answers
 ```
 
+# Authentification
+1. Copier le fichier ./script/.env.example et le renommer en .env
+1. Remplir la valeur MONGO_URL dans le fichier .env
+2. Remplir la valeur de ACCESS_TOKEN_SECRET avec celle du serveur (dokku)
+3. Lancer le script __createAccessToken__ avec le nom de l'utilisateur et son rôle 
+Rôles acceptés : ["frontend", "dev"]
+```
+node createAccessToken.js <username> <usertoken>
+```
+
 # Mettre à jour le modèle de données
 ## Manuellement
 1. ajouter un attribut dans le schéma mongo
