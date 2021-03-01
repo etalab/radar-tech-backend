@@ -75,7 +75,6 @@ module.exports = new GraphQLSchema({
 				type: GraphQLList(AnswerType),
 				resolve: () => {
 					return AnswerModel.find().exec()
-					.then(res => res)
 					.catch(err => {
 						logger.error(`An error occured in answer querry ${err}`);
 						return err;
@@ -91,7 +90,6 @@ module.exports = new GraphQLSchema({
 				},
 				resolve: (_, args) => {
 					return AnswerModel.findById(args.id).exec()
-					.then(res => res)
 					.catch(err => {
 						logger.error(`An error occured in answerByID querry ${err}`);
 						return err;
@@ -111,7 +109,6 @@ module.exports = new GraphQLSchema({
 				},
 				resolve: async (_, args) => {
 					return postAnswer(args["answer"])
-					.then(newAnswer => newAnswer)
 					.catch(err => {
 						logger.error(`An error occured in createAnswer mutation ${err}`);
 						return err;

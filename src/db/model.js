@@ -29,7 +29,6 @@ const updateEmailSent = async (emailHash, sent) => {
 
 const updateAnswer = async (condition, update, options) => {
   return await AnswerModel.updateOne(condition, update, options)
-  .then(data => data)
   .catch(e => {
     console.log(e);
     return e;
