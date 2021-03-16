@@ -1,8 +1,9 @@
 const { AnswerModel } = require('./db/model.js')
 const postAnswer = require('./resolvers.js')
 const { logger } = require('./middlewares/logger.js')
+const { buildSchema } = require('graphql')
 
-const {
+/*const {
   GraphQLID,
   GraphQLNonNull,
   GraphQLString,
@@ -101,6 +102,19 @@ module.exports = new GraphQLSchema({
   mutation: new GraphQLObjectType({
     name: 'Mutation',
     fields: {
+      createAnswer2: {
+        type: AnswerType,
+        args: {
+          answer: { type: (AnswerInputType) },
+        },
+        resolve: async (_, args) => {
+          return postAnswer(args.answer)
+            .catch(err => {
+              logger.error(`An error occured in createAnswer mutation ${err}`)
+              return err
+            })
+        },
+      },
       createAnswer: {
         type: AnswerType,
         args: {
@@ -130,4 +144,63 @@ module.exports = new GraphQLSchema({
       },
     },
   }),
-})
+})*/
+
+
+
+var schema = buildSchema(`
+  type Answer {
+    id: Int,
+    email: String
+    autres_libs: [String],
+    connaissance_db: [String],
+  }
+  input AnswerInput {
+    email: String
+    autres_libs: [String],
+    connaissance_db: [String],
+  },
+  type Query {
+    hello: String,
+    answers: [Answer],
+    answer(id: Int!): Answer,
+  },
+  type Mutation {
+    createAnswer(answer: AnswerInput!): Answer
+  }
+`);
+
+var root = {
+  hello: () => {
+    return "Hello world!";
+  },
+  answers: async () => {
+    //return getAnswers();
+    try {
+      return AnswerModel.find().exec();
+    } catch (err) {
+      logger.error(`An error occured in answer querry ${err}`);
+      return err;
+    }
+  },
+  answer: async ({ id }) => {
+    //const products = getProducts();
+    //return products.find(p => p.id === id);
+    try {
+      return AnswerModel.findById(id).exec();
+    } catch (err) {
+      logger.error(`An error occured in answerByID querry ${err}`);
+      return err;
+    }
+  },
+  createAnswer: async args => {
+    try {
+      return postAnswer(args.answer);
+    } catch (err) {
+      logger.error(`An error occured in createAnswer mutation ${err}`);
+      return err;
+    }
+  }
+};
+
+module.exports = { schema, root };

@@ -14,6 +14,9 @@ const tokenAlgo = process.env.ACCESS_TOKEN_ALGORITHM
 
 module.exports = async (req, res, next) => {
   try {
+    if (process.env.NODE_ENV === 'development') {
+      return next()
+    }
     const { headers } = req
 
     if (!headers.authorization) {
