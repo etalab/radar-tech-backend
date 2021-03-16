@@ -3,7 +3,7 @@ const postAnswer = require('./resolvers.js')
 const { logger } = require('./middlewares/logger.js')
 const { buildSchema } = require('graphql')
 
-/*const {
+/* const {
   GraphQLID,
   GraphQLNonNull,
   GraphQLString,
@@ -144,11 +144,9 @@ module.exports = new GraphQLSchema({
       },
     },
   }),
-})*/
+}) */
 
-
-
-var schema = buildSchema(`
+const schema = buildSchema(`
   type Answer {
     id: Int,
     email: String
@@ -168,39 +166,39 @@ var schema = buildSchema(`
   type Mutation {
     createAnswer(answer: AnswerInput!): Answer
   }
-`);
+`)
 
-var root = {
+const root = {
   hello: () => {
-    return "Hello world!";
+    return 'Hello world!'
   },
   answers: async () => {
-    //return getAnswers();
+    // return getAnswers();
     try {
-      return AnswerModel.find().exec();
+      return AnswerModel.find().exec()
     } catch (err) {
-      logger.error(`An error occured in answer querry ${err}`);
-      return err;
+      logger.error(`An error occured in answer querry ${err}`)
+      return err
     }
   },
   answer: async ({ id }) => {
-    //const products = getProducts();
-    //return products.find(p => p.id === id);
+    // const products = getProducts();
+    // return products.find(p => p.id === id);
     try {
-      return AnswerModel.findById(id).exec();
+      return AnswerModel.findById(id).exec()
     } catch (err) {
-      logger.error(`An error occured in answerByID querry ${err}`);
-      return err;
+      logger.error(`An error occured in answerByID querry ${err}`)
+      return err
     }
   },
   createAnswer: async args => {
     try {
-      return postAnswer(args.answer);
+      return postAnswer(args.answer)
     } catch (err) {
-      logger.error(`An error occured in createAnswer mutation ${err}`);
-      return err;
+      logger.error(`An error occured in createAnswer mutation ${err}`)
+      return err
     }
-  }
-};
+  },
+}
 
-module.exports = { schema, root };
+module.exports = { schema, root }
