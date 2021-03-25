@@ -22,6 +22,7 @@
     "graphql": "^15.4.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.11.1",
+    "mongoose-schema-to-graphql": "^2.8.1",
     "morgan": "^1.10.0",
     "sib-api-v3-sdk": "^8.0.2",
     "winston": "^3.3.3"
