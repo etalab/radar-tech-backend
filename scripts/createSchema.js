@@ -1,21 +1,7 @@
 const questionnaire = require('./questionnaire.js')
 const fs = require('fs')
 
-// TYPE
-/*
-const ARRAY_OF_STRING = (yup.array().of(yup.string()), [String])
-const STRING = (yup.string, String)
-const NUMBER = (yup.number, Number)
-
-education_formation: {
-
-ecole_inge: Object { selection: (1) […], filieres: "ddd" }
-
-uni_autres: Object { selection: (1) […], filieres: "ddd" }
-}
-
-*/
-
+const importList = 'const mongoose = require(\'mongoose\');\n\n'
 let mongoSchemaStr = 'const mongoSchema = {\n' +
 ` email: {
     type: String,
@@ -38,41 +24,38 @@ let mongoSchemaStr = 'const mongoSchema = {\n' +
     default: false
   }, \n`
 
-let answerTypeGqlStr = `
-const {
-  GraphQLID,
-  GraphQLNonNull,
-  GraphQLString,
-} = require("graphql");
-
-const answerTypeGql = {
-  id: { type: GraphQLID },
-  email: { type: GraphQLNonNull(GraphQLString) },\n`
-
+const createAttribute = (name, type, isRequired) => {
+  if (isRequired !== undefined && isRequired === true) {
+    return `  ${name}: {
+        type: ${type},
+        required: true
+      }, 
+    \n`
+  } else {
+    return `  ${name}: ${type}, \n`
+  }
+}
 const pages = questionnaire.pages
 pages.forEach(page => {
-  page.elements.forEach(element => {
-    const attributName = element.name
-    if (element.isReqired !== undefined && element.isReqired === true) {
-      mongoSchemaStr += `  ${attributName}: {
-          type: String,
-          required: true
-        }, 
-      \n`
-      answerTypeGqlStr += ` ${attributName}: { type: GraphQLNonNull(GraphQLString) }, \n`
+  page.elements.forEach((element, i) => {
+    const name = element.name
+    const type = 'String'
+    if (element.type === 'matrix') {
+      // this is an object
+      let object = `const Object${i} = new mongoose.Schema({\n`
+      element.rows.forEach(row => {
+        object += `  "${row.replace(' ', '')}": String,\n`
+      })
+      object += '}); \n\n'
+      mongoSchemaStr = object + mongoSchemaStr
+      mongoSchemaStr += createAttribute(name, `Object${i}`)
     } else {
-      mongoSchemaStr += `  ${attributName}: String, \n`
-      answerTypeGqlStr += `  ${attributName}: { type: GraphQLString }, \n`
+      mongoSchemaStr += createAttribute(name, type)
     }
   })
 })
 
-fs.writeFile('./src/mongoSchema.js', mongoSchemaStr + '}; \n\n module.exports = mongoSchema;', (err) => {
+fs.writeFile('./schema/answer.js', importList + mongoSchemaStr + '}; \n\n module.exports = mongoSchema;', (err) => {
   if (err) throw err
   console.log('mongoSchema.js has been saved!')
-})
-
-fs.writeFile('./src/graphqlSchema.js', answerTypeGqlStr + '}; \n\n module.exports = answerTypeGql;', (err) => {
-  if (err) throw err
-  console.log('graphqlSchema.js has been saved!')
 })

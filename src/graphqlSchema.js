@@ -1,9 +1,8 @@
 const { AnswerModel } = require('./db/model.js')
 const postAnswer = require('./resolvers.js')
 const { logger } = require('./middlewares/logger.js')
-const { buildSchema } = require('graphql')
 
-/* const {
+const {
   GraphQLID,
   GraphQLNonNull,
   GraphQLString,
@@ -22,7 +21,6 @@ const answerTypeGql = {
   connaissance_db_expert: { type: new GraphQLList(GraphQLString) },
   containers_bool: { type: GraphQLString },
   containers_liste: { type: GraphQLString },
-  // containers_list-Comment: { type: GraphQLString },
   demo_administration: { type: GraphQLString },
   demo_age: { type: GraphQLString },
   demo_entree_admin: { type: GraphQLString },
@@ -33,8 +31,6 @@ const answerTypeGql = {
   demo_status: { type: GraphQLString },
   demo_titre: { type: GraphQLString },
   editeur_principal: { type: new GraphQLList(GraphQLString) },
-  // education_formation: yup.object(),
-  // education_formation_autres: yup.object(),
   experience_programmation: { type: GraphQLInt },
   frameworks_web: { type: new GraphQLList(GraphQLString) },
   language_expert: { type: new GraphQLList(GraphQLString) },
@@ -144,61 +140,4 @@ module.exports = new GraphQLSchema({
       },
     },
   }),
-}) */
-
-const schema = buildSchema(`
-  type Answer {
-    id: Int,
-    email: String
-    autres_libs: [String],
-    connaissance_db: [String],
-  }
-  input AnswerInput {
-    email: String
-    autres_libs: [String],
-    connaissance_db: [String],
-  },
-  type Query {
-    hello: String,
-    answers: [Answer],
-    answer(id: Int!): Answer,
-  },
-  type Mutation {
-    createAnswer(answer: AnswerInput!): Answer
-  }
-`)
-
-const root = {
-  hello: () => {
-    return 'Hello world!'
-  },
-  answers: async () => {
-    // return getAnswers();
-    try {
-      return AnswerModel.find().exec()
-    } catch (err) {
-      logger.error(`An error occured in answer querry ${err}`)
-      return err
-    }
-  },
-  answer: async ({ id }) => {
-    // const products = getProducts();
-    // return products.find(p => p.id === id);
-    try {
-      return AnswerModel.findById(id).exec()
-    } catch (err) {
-      logger.error(`An error occured in answerByID querry ${err}`)
-      return err
-    }
-  },
-  createAnswer: async args => {
-    try {
-      return postAnswer(args.answer)
-    } catch (err) {
-      logger.error(`An error occured in createAnswer mutation ${err}`)
-      return err
-    }
-  },
-}
-
-module.exports = { schema, root }
+})
