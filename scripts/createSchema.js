@@ -8,36 +8,36 @@ const createAttribute = (name, type, isRequired) => {
       }, 
     \n`
   } else {
-    return `  ${name}: ${type}, \n`
+    return `  ${name}: ${type},\n`
   }
 }
 
 let mongoSchemaStr = `
-export default answerSchema = {
+const answerSchema = {
   email: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   emailHash: {
     type: String,
-    required: true
+    required: true,
   },
   salt: String,
   confirm_email: {
     type: String,
     required: true,
-    default: false
+    default: false,
   },
   email_sent: {
     type: String,
     required: true,
-    default: false
+    default: false,
   },\n`
 
 module.exports = (questionnaire) => {
   return new Promise((resolve, reject) => {
-    const importList = 'import mongoose from \'mongoose\';\n\n'
+    const importList = 'import mongoose from \'mongoose\'\n\n'
     questionnaire.pages.forEach(page => {
       page.elements.forEach((element, i) => {
         const name = element.name
@@ -45,9 +45,9 @@ module.exports = (questionnaire) => {
         if (element.type === 'matrix') {
           let object = `const Object${i} = new mongoose.Schema({\n`
           element.rows.forEach(row => {
-            object += `  "${row.replace(' ', '')}": String,\n`
+            object += `  ${row.replace(' ', '')}: String,\n`
           })
-          object += '}); \n\n'
+          object += '})\n'
           mongoSchemaStr = object + mongoSchemaStr
           mongoSchemaStr += createAttribute(name, `Object${i}`)
         } else {
@@ -56,7 +56,9 @@ module.exports = (questionnaire) => {
       })
     })
 
-    fs.writeFile('../src/db/Answer.js', importList + mongoSchemaStr + '};', (err) => {
+    const strToFile = importList + mongoSchemaStr + '}\n\n' + 'export default answerSchema\n'
+
+    fs.writeFile('../src/db/Answer.js', strToFile, (err) => {
       if (err) { reject(err) }
       resolve(true)
     })
