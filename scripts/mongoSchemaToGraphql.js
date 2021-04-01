@@ -1,8 +1,9 @@
 const createType = require('mongoose-schema-to-graphql')
 const mongoose = require('mongoose')
-// const answerSchema = require('../src/db/Answer.js');
 const answerSchema = require('./schema/answer.js')
 const postAnswer = require('../src/resolvers.js')
+const { logger } = require('../src/middlewares/logger.js')
+const { formatError } = require('graphql/error')
 const MONGO_URL = process.env.MONGO_URL || 'mongodb://localhost:27017/radarTechDB'
 // no user needed locally but we need it for the prod environment
 mongoose.connect(MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -16,17 +17,14 @@ const AnswerSchema = mongoose.Schema(answerSchema)
 const AnswerModel = mongoose.model('answer', answerSchema)
 
 const config = {
-  name: 'Answer', // graphQL type's name
-  description: 'Answer base schema', // graphQL type's description
-  class: 'GraphQLObjectType', // "definitions" class name
-  schema: AnswerSchema, // your Mongoose schema "let couponSchema = mongoose.Schema({...})"
-  exclude: ['_id'], // fields which you want to exclude from mongoose schema
-  /* extend: {
-      price: {type: GraphQLFloat}
-    } */ // add custom properties or overwrite existed
+  name: 'Answer',
+  description: 'Answer base schema',
+  class: 'GraphQLObjectType',
+  schema: AnswerSchema,
+  exclude: ['_id'],
 }
-
 const AnswerType = createType(config)
+
 config.class = 'GraphQLInputObjectType'
 config.name = 'AnswerInput'
 const AnswerInputType = createType(config)
@@ -41,7 +39,7 @@ const graphqlSchema = new GraphQLSchema({
         resolve: () => {
           return AnswerModel.find().exec()
             .catch(err => {
-            // logger.error(`An error occured in answer querry ${err}`)
+              logger.error(`An error occured in answer querry ${err}`)
               return err
             })
         },
@@ -59,7 +57,7 @@ const graphqlSchema = new GraphQLSchema({
         resolve: async (_, args) => {
           return postAnswer(args.answer)
             .catch(err => {
-              // logger.error(`An error occured in createAnswer mutation ${err}`)
+              logger.error(`An error occured in createAnswer mutation ${err}`)
               return err
             })
         },
@@ -79,9 +77,8 @@ app.use(
     schema: graphqlSchema,
     graphiql: true,
     customFormatErrorFn: (err) => {
-      // logger.error(JSON.stringify({ message: err.message, location: err.location, path: err.path }))
-      // return formatError(err)
-      return err
+      logger.error(JSON.stringify({ message: err.message, location: err.location, path: err.path }))
+      return formatError(err)
     },
   }),
 )
