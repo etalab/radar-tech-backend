@@ -6,8 +6,7 @@ const { formatError } = require('graphql/error')
 const { confirmEmail } = require('./db/model.js')
 const { httpLogger, logger } = require('./middlewares/logger.js')
 const auth = require('./middlewares/auth.js')
-// const graphqlSchema = require('./graphqlSchema.js')
-const { schema, root } = require('./graphqlSchema.js')
+const graphqlSchema = require('./graphql/graphqlSchema.js')
 require('dotenv').config()
 
 const app = Express()
@@ -24,8 +23,7 @@ app.use(
   '/graphql',
   auth,
   graphqlHTTP({
-    schema,
-    root,
+    schema: graphqlSchema,
     graphiql: true,
     customFormatErrorFn: (err) => {
       logger.error(JSON.stringify({ message: err.message, location: err.location, path: err.path }))
