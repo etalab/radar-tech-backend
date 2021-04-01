@@ -37,7 +37,7 @@ const answerSchema = {
 
 module.exports = (questionnaire) => {
   return new Promise((resolve, reject) => {
-    const importList = 'import mongoose from \'mongoose\'\n\n'
+    const importList = 'const mongoose = require(\'mongoose\')\n\n'
     questionnaire.pages.forEach(page => {
       page.elements.forEach((element, i) => {
         const name = element.name
@@ -56,7 +56,7 @@ module.exports = (questionnaire) => {
       })
     })
 
-    const strToFile = importList + mongoSchemaStr + '}\n\n' + 'export default answerSchema\n'
+    const strToFile = importList + mongoSchemaStr + '}\n\n' + 'module.exports = answerSchema\n'
 
     fs.writeFile('../src/db/Answer.js', strToFile, (err) => {
       if (err) { reject(err) }
