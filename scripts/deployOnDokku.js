@@ -1,8 +1,9 @@
 const createSchema = require('./createSchema.js')
-const fs = require('fr')
+const fs = require('fs')
 // const { logger } = require('../src/middlewares/logger.js'
 // const exec = require('child_process').exec
 
+// const schemaName = process.argv[2] // à repenser
 const jsonFilePath = process.argv[2] // ou provenant d'un fichier de config
 console.log(jsonFilePath)
 const rawdata = fs.readFileSync(jsonFilePath)
