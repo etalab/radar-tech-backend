@@ -1,3 +1,15 @@
+import mongoose from 'mongoose'
+
+const Object3 = new mongoose.Schema({
+  Row4: String,
+  Row5: String,
+})
+
+const Object2 = new mongoose.Schema({
+  Row1: String,
+  Row2: String,
+})
+
 const answerSchema = {
   email: {
     type: String,
@@ -19,40 +31,11 @@ const answerSchema = {
     required: true,
     default: false,
   },
-  autres_libs: [String],
-  connaissance_db: [String],
-  connaissance_db_expert: [String],
-  containers_bool: String,
-  containers_liste: String,
-  demo_administration: String,
-  demo_age: String,
-  demo_entree_admin: String,
-  demo_etudiant: String,
-  demo_fonctions: String,
-  demo_plus_hautes_etudes: String,
-  demo_rythme: String,
-  demo_status: String,
-  demo_titre: String,
-  editeur_principal: [String],
-  experience_programmation: Number,
-  frameworks_web: [String],
-  language_expert: [String],
-  language_pas_expert: [String],
-  os_principal: [String],
-  plateformes_os: [String],
-  premiere_ligne_code: Number,
-  profils_tech: Number,
-  programmation_pro: Number,
-  recherche_travail: String,
-  recherche_travail_secteur: String,
-  recherches_info: String,
-  recherches_info_texte: String,
-  satisfaction: Number,
-  taille_structure: String,
-  travail_activite: String,
-  travail_activite_autre: [String],
-  travail_bureau_domicile: String,
   demo_genre: String,
+  demo_age: String,
+  question1: Object2,
+  question2: Object3,
+  demo_etudiant: String,
 }
 
-module.exports = answerSchema
+export default answerSchema
