@@ -1,6 +1,7 @@
-const crypto = require('crypto')
-const { AnswerModel, updateEmailSent } = require('./db/model.js')
+const { AnswerModel, UserModel, updateEmailSent } = require('./db/model.js')
 const { logger } = require('./middlewares/logger.js')
+const { createSalt, createHash } = require('./utils/helpers.js')
+
 require('dotenv').config()
 
 let API_URL = process.env.API_URL
@@ -44,37 +45,65 @@ const sendEmail = async (answer) => {
     .catch(e => e.error)
 }
 
-function createSaltAndHash (email) {
+const postAnswer = async (answerData) => {
+  const newAnswer = answerData
+  try {
+    const salt = createSalt()
+    const res = createHash(newAnswer.email, salt)
+    newAnswer.salt = salt
+    newAnswer.emailHash = res.hash
+    logger.info(`EmailHash created ${res.hash}`)
+    const answer = AnswerModel.create(newAnswer)
+    logger.info(`postAnswer: A new answer has correctly been inserted in database. EmailHash is ${answer.emailHash}`)
+    const result = await sendEmail(answer)
+    logger.info(`postAnswer: Email has been sent. EmailHash is ${result.emailHash}`)
+    return result
+  } catch (err) {
+    logger.error(`postAnswer: An error occured during postAnswer function ${err}`)
+    throw err
+  }
+}
+
+const createUser = (username, password, role) => {
+  try {
+    const salt = createSalt()
+    const passwordHashed = createHash(password, salt)
+    const userData = { username, password: passwordHashed, salt, role }
+    const user = UserModel(userData)
+    return user.save()
+  } catch (err) {
+    logger.error(`createUser: An error occured during createUser function ${err}`)
+    throw err
+  }
+}
+
+const loginUser = async (username, password) => {
   return new Promise((resolve, reject) => {
-    crypto.randomBytes(16, (err, salt) => {
-      if (err) throw reject(err)
-      const hash = crypto.pbkdf2Sync(email, salt.toString('hex'), 1000, 32, 'sha512').toString('hex')
-      resolve({ salt, hash })
-    })
+    UserModel.find({ username })
+      .then(users => {
+        if (password === null) {
+          reject(new Error('password is required'))
+        }
+        if (users.length === 0) {
+          reject(new Error("this user doesn't exist"))
+        }
+        const user = users[0]
+        if (user.password === null || user.salt === null) {
+          reject(new Error('password, salt and hash are required to compare'))
+        }
+        const passwordHashed = createHash(password, user.salt)
+        console.log(passwordHashed)
+        console.log(user.password)
+        if (passwordHashed === user.password) {
+          resolve(user)
+        } else {
+          reject(new Error("password doesn't correspond to the user password"))
+        }
+      })
+      .catch(err => {
+        reject(err)
+      })
   })
 }
 
-const postAnswer = async (answer) => {
-  const newAnswer = answer
-  return createSaltAndHash(newAnswer.email)
-    .then(res => {
-      newAnswer.salt = res.salt
-      newAnswer.emailHash = res.hash
-      logger.info(`EmailHash created ${res.hash}`)
-      return AnswerModel.create(newAnswer)
-    })
-    .then(result => {
-      logger.info(`postAnswer: A new answer has correctly been inserted in database. EmailHash is ${result.emailHash}`)
-      return sendEmail(result)
-    })
-    .then(result => {
-      logger.info(`postAnswer: Email has been sent. EmailHash is ${result.emailHash}`)
-      return result
-    })
-    .catch(err => {
-      logger.error(`postAnswer: An error occured during postAnswer function ${err}`)
-      return err
-    })
-}
-
-module.exports = postAnswer
+module.exports = { postAnswer, createUser, loginUser }

@@ -37,12 +37,12 @@ module.exports = async (req, res, next) => {
       throw new Error(`Header format is Authorization: ${tokenType} token`)
     }
 
-    const { id, username, role } = await jwtVerify(token, tokenSecret, {
+    const { id, username, password } = await jwtVerify(token, tokenSecret, {
       algorithms: tokenAlgo,
     })
 
     /** Check that a user with this userId exists */
-    const user = await UserModel.find({ _id: id, username, role })
+    const user = await UserModel.find({ _id: id, username, password })
     if (user === undefined || user.length === 0) {
       throw new Error(`User ${username} doesn't exist`)
     }

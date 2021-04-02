@@ -1,11 +1,6 @@
-import mongoose from 'mongoose'
+const mongoose = require('mongoose')
 
 const Object3 = new mongoose.Schema({
-  Row4: String,
-  Row5: String,
-})
-
-const Object2 = new mongoose.Schema({
   Row1: String,
   Row2: String,
 })
@@ -31,11 +26,10 @@ const answerSchema = {
     required: true,
     default: false,
   },
-  demo_genre: String,
-  demo_age: String,
-  question1: Object2,
-  question2: Object3,
-  demo_etudiant: String,
+  question2: String,
+  question4: String,
+  question3: String,
+  question1: Object3,
 }
 
-export default answerSchema
+module.exports = answerSchema

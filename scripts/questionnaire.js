@@ -49,6 +49,20 @@ const questionnaire = {
             'Row 2',
           ],
         },
+        {
+          type: 'matrix',
+          name: 'question2',
+          title: 'Votre avis sur',
+          columns: [
+            'Column 1',
+            'Column 2',
+            'Column 3',
+          ],
+          rows: [
+            'Row 4',
+            'Row 5',
+          ],
+        },
       ],
     },
     {

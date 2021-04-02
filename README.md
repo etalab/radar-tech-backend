@@ -70,6 +70,7 @@ C'est l'adresse du backend qui est utilisée dans le mail de confirmation de par
     ```
     $ dokku config:set nom_app API_URL=http://<nom_app>.app.etalab.studio
     ```
+    dokku config:set test-automatisation-rt API_URL=http://test-automatisation-rt.app.etalab.studio
 
 7. Pousser les modification locale
     ```
@@ -101,7 +102,7 @@ $ export DOKKU_PORT='22'
 ```
 2. Créer le service avec Dokku
 ```
-$ dokku mongo:add <db_name>
+$ dokku mongo:create <db_name>
 ```
 3. Lier la base avec l'application
 ```

@@ -1,12 +1,12 @@
 const Express = require('express')
 const { graphqlHTTP } = require('express-graphql')
 const cors = require('cors')
-const bodyParser = require('body-parser')
 const { formatError } = require('graphql/error')
 const { confirmEmail } = require('./db/model.js')
 const { httpLogger, logger } = require('./middlewares/logger.js')
 const auth = require('./middlewares/auth.js')
 const graphqlSchema = require('./graphql/graphqlSchema.js')
+const createAccessToken = require('./utils/createAccessToken.js')
 require('dotenv').config()
 
 const app = Express()
@@ -16,8 +16,8 @@ app.use(httpLogger)
 
 app.use(cors())
 // Here we are configuring express to use body-parser as middle-ware.
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json())
+app.use(Express.json())
+app.use(Express.urlencoded({ extended: true }))
 
 app.use(
   '/graphql',
@@ -43,6 +43,29 @@ app.get('/confirmEmail', async (req, res) => {
     .catch(e => {
       logger.error(`an error occured during mail confirmation: ${e}`)
       return res.status(500).end()
+    })
+})
+
+app.post('/token', async (req, res) => {
+  const body = req.body
+  const username = body.username
+  const password = body.password
+  if (username === undefined || username === '') {
+    const errorMsg = 'Username is required to create token'
+    logger.error(errorMsg)
+    return res.status(500).send({ error: errorMsg }).end()
+  }
+  if (password === undefined || password === '') {
+    const errorMsg = 'Password is required to create token'
+    logger.error(errorMsg)
+    return res.status(500).send({ error: errorMsg }).end()
+  }
+  createAccessToken(username, password)
+    .then(token => res.json({ token }))
+    .catch(err => {
+      const errorMsg = `An error occured trying to create token: ${err}`
+      logger.error()
+      return res.status(500).send({ error: errorMsg }).end()
     })
 })
 
