@@ -16,4 +16,4 @@ console.log(createHash(myArgs[1], createSalt()))
 // npm run dev
 // tester via l'api
 
-// db.users.insert({ username: 'audrey1829', salt: 'a200174d9be682360a3f60bb61d5261d', password: 'a30f6b49dd8dfa1ca1d7199bcdeb73f24d9224b0e41bc4406006dd6f35d7f0d9', role: 'dev' })
+// db.users.insert({ username: 'audrey1851', salt: 'a4f5c5a9b48ba11c971238ee49affff4', password: 'ad1dc3dc0812ec8f29e73b96dfdc90594746c30d4b28fff7e790ac57cbed1c06', role: 'dev' })
