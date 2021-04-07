@@ -35,7 +35,7 @@ const answerSchema = {
     default: false,
   },\n`
 
-module.exports = (questionnaire) => {
+const createSchema = (questionnaire) => {
   return new Promise((resolve, reject) => {
     const importList = 'const mongoose = require(\'mongoose\')\n\n'
     questionnaire.pages.forEach(page => {
@@ -64,3 +64,11 @@ module.exports = (questionnaire) => {
     })
   })
 }
+
+const jsonFilePath = process.argv[2]
+const rawdata = fs.readFileSync(jsonFilePath)
+const questionnaire = JSON.parse(rawdata)
+
+createSchema(questionnaire)
+  .then(_ => console.log('DONE'))
+  .catch(err => console.log(err))
