@@ -115,39 +115,13 @@ echo ACCESS_TOKEN_ALGORITHM='HS256' >> .env
 echo ACCESS_TOKEN_SECRET='szzYbNYjTquFKqEFHFrHwzRpj' >> .env
 MONGO_URL=$(dokku config:show | grep MONGO_URL | awk '{ print $2 }') | echo MONGO_URL=$MONGO_URL >> .env
 
-
-
-
-# BACKEND 
-```
-git clone https://github.com/etalab/radar-tech-backend.git
-git checkout radarTechCreator
-
-```
-##  Création du modèle
-copier les fichiers sources des questionanires dans le dossiers ./scripts/sources
-exécuter le script pour générer les modèles
-```
-node createSchema <path_vers_le_fichier>
-```
-Le modèles est mis à jour dans le dossier ./src/db/Answers.js
-### Pistes d'amélioration 
+## Pistes d'amélioration 
 J'ai plusieurs fichiers en entrée avec un clé
 Cette clé représente le nom du modèle
 Je peux générer des modèles en fonctions des fichiers
 soit j'exécute le script sur un dossier
 soit on exécute plusieurs fois le scripts avec des noms de fichiers en entrée
 soit on a un fichier yaml et on récupère la liste des fichiers
-
-## Créer une base de données
-
-## Créer une app 
-
-### linker l'app et la DB
-
-### Ajouter les variables d'environnement requises
-
-## Création d'un utilisateur pour les tests et pour le frontend
 
 
 
