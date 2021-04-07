@@ -74,7 +74,7 @@ le salt et le mot de passe hashé sont affichées en console
 ```
 dokku mongo:connect
 > use <nom de la db>
-> db.users.insert({ username: 'frontend-app', role: 'frontend', hash: 'c06ff7007201e247ae1faa5ab6be2837feeea5ad883b8efd7e89090897d69ffd', salt: 'a43ae6043b711abd74972f46acf4c39e' })
+> db.users.insert({ username: 'frontend-app', role: 'frontend', password: 'c06ff7007201e247ae1faa5ab6be2837feeea5ad883b8efd7e89090897d69ffd', salt: 'a43ae6043b711abd74972f46acf4c39e' })
 ```
 Le nom de la DB est indiqué à la fin de l'url de connexion `mongodb://<service_name>:2652096c746158e0fd896ff2b7416877@<service_user>:27017/<db_name>`
 
@@ -82,11 +82,11 @@ Le nom de la DB est indiqué à la fin de l'url de connexion `mongodb://<service
 Une route est dédié à la génération du token
 CURL
 ```
-curl --location --request POST 'http://test-automatisation-rt.app.etalab.studio/token' \
+curl --location --request POST 'http://<nom_app>.app.etalab.studio/token' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-    "username": "audrey1851",
-    "password": "TrgYrSZ4hHJr6"
+    "username": "frontend",
+    "password": "<password>"
 }'
 ```
 
@@ -95,11 +95,11 @@ Nodejs Request
 var request = require('request');
 var options = {
   'method': 'POST',
-  'url': 'http://test-automatisation-rt.app.etalab.studio/token',
+  'url': 'http://<nom_app>.app.etalab.studio/token',
   'headers': {
     'Content-Type': 'application/json'
   },
-  body: JSON.stringify({"username":"audrey1851","password":"TrgYrSZ4hHJr6"})
+  body: JSON.stringify({"username":"frontend","password":"<password>"})
 
 };
 request(options, function (error, response) {
@@ -107,13 +107,6 @@ request(options, function (error, response) {
   console.log(response.body);
 });
 ```
-// Ajouter les variables d'environnement pour les scripts
-cd scripts
-vi .env
-echo ACCESS_TOKEN_TYPE='Bearer' >> .env
-echo ACCESS_TOKEN_ALGORITHM='HS256' >> .env
-echo ACCESS_TOKEN_SECRET='szzYbNYjTquFKqEFHFrHwzRpj' >> .env
-MONGO_URL=$(dokku config:show | grep MONGO_URL | awk '{ print $2 }') | echo MONGO_URL=$MONGO_URL >> .env
 
 ## Pistes d'amélioration 
 J'ai plusieurs fichiers en entrée avec un clé
