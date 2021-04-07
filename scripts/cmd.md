@@ -66,7 +66,7 @@ on a pas d'interface d'admin donc la création de l'utilisateur est semi automat
 ### Créer le salt et hash d'un mot de passe
 ```
 cd script
-node createUser.js <username> <password>
+node createHashAndSalt.js <username> <password>
 ```
 le salt et le mot de passe hashé sont affichées en console
 
