@@ -12,8 +12,9 @@ const createAttribute = (name, type, isRequired) => {
   }
 }
 
-let mongoSchemaStr = `
-const answerSchema = {
+const createSchema = (questionnaire) => {
+  const metier = questionnaire.metier
+  let mongoSchemaStr = `const ${metier} = {
   email: {
     type: String,
     required: true,
@@ -34,8 +35,6 @@ const answerSchema = {
     required: true,
     default: false,
   },\n`
-
-const createSchema = (questionnaire) => {
   return new Promise((resolve, reject) => {
     const importList = 'const mongoose = require(\'mongoose\')\n\n'
     questionnaire.pages.forEach(page => {
@@ -56,9 +55,12 @@ const createSchema = (questionnaire) => {
       })
     })
 
-    const strToFile = importList + mongoSchemaStr + '}\n\n' + 'module.exports = answerSchema\n'
+    let strToFile = importList + mongoSchemaStr + '}\n\n'
+    strToFile += `const ${metier}Schema = mongoose.Schema(${metier})\n`
+    strToFile += `const ${metier}Model = mongoose.model('${metier}', ${metier})\n`
+    strToFile += `module.exports = { ${metier}Schema, ${metier}Model }\n`
 
-    fs.writeFile('../src/db/Answer.js', strToFile, (err) => {
+    fs.writeFile(`../src/db/metiers/${metier}.js`, strToFile, (err) => {
       if (err) { reject(err) }
       resolve(true)
     })

@@ -1,4 +1,4 @@
-const { AnswerModel, UserModel, updateEmailSent } = require('./db/model.js')
+const { UserModel, updateEmailSent } = require('./db/model.js')
 const { logger } = require('./middlewares/logger.js')
 const { createSalt, createHash } = require('./utils/helpers.js')
 
@@ -45,19 +45,30 @@ const sendEmail = async (answer) => {
     .catch(e => e.error)
 }
 
-const postAnswer = async (answerData) => {
+const postAnswer = async (metier, answerData) => {
+  console.log('postAnswer')
+  console.log(metier)
+  console.log(answerData)
+  const obj = require(`./db/metiers/${metier}.js`)
+  const model = obj[`${metier}Model`]
+  console.log(model)
   const newAnswer = answerData
   try {
     const salt = createSalt()
-    const res = createHash(newAnswer.email, salt)
+    const hash = createHash(newAnswer.email, salt)
     newAnswer.salt = salt
-    newAnswer.emailHash = res.hash
-    logger.info(`EmailHash created ${res.hash}`)
-    const answer = AnswerModel.create(newAnswer)
-    logger.info(`postAnswer: A new answer has correctly been inserted in database. EmailHash is ${answer.emailHash}`)
-    const result = await sendEmail(answer)
-    logger.info(`postAnswer: Email has been sent. EmailHash is ${result.emailHash}`)
-    return result
+    newAnswer.emailHash = hash
+    logger.info(`EmailHash created ${hash}`)
+    await model.create(newAnswer)
+      .then(answer => {
+        console.log(answer)
+        logger.info(`postAnswer: A new answer has correctly been inserted in database. EmailHash is ${answer.emailHash}`)
+        return sendEmail(answer)
+      })
+      .then(result => {
+        logger.info(`postAnswer: Email has been sent. EmailHash is ${result.emailHash}`)
+        return result
+      })
   } catch (err) {
     logger.error(`postAnswer: An error occured during postAnswer function ${err}`)
     throw err
