@@ -1,7 +1,7 @@
 const createType = require('mongoose-schema-to-graphql')
 const mongoose = require('mongoose')
 const answerSchema = require('../db/Answer.js')
-const AnswerModel = require('../db/model.js')
+const { AnswerModel } = require('../db/model.js')
 const postAnswer = require('../resolvers.js')
 const { logger } = require('../middlewares/logger.js')
 
