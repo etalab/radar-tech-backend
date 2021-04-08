@@ -1,4 +1,5 @@
-const { UserModel, updateEmailSent } = require('./db/model.js')
+const { updateEmailSent } = require('./db/model.js')
+const userModel = require('./db/User.js')
 const { logger } = require('./middlewares/logger.js')
 const { createSalt, createHash } = require('./utils/helpers.js')
 
@@ -84,7 +85,7 @@ const createUser = (username, password, role) => {
     const salt = createSalt()
     const passwordHashed = createHash(password, salt)
     const userData = { username, password: passwordHashed, salt, role }
-    const user = UserModel(userData)
+    const user = userModel(userData)
     return user.save()
   } catch (err) {
     logger.error(`createUser: An error occured during createUser function ${err}`)
@@ -94,7 +95,7 @@ const createUser = (username, password, role) => {
 
 const loginUser = async (username, password) => {
   return new Promise((resolve, reject) => {
-    UserModel.find({ username })
+    userModel.find({ username })
       .then(users => {
         if (password === null) {
           reject(new Error('password is required'))
@@ -103,6 +104,7 @@ const loginUser = async (username, password) => {
           reject(new Error("this user doesn't exist"))
         }
         const user = users[0]
+        console.log(user)
         if (user.password === null || user.salt === null) {
           reject(new Error('password, salt and hash are required to compare'))
         }
