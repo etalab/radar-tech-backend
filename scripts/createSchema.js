@@ -19,21 +19,6 @@ const createSchema = (questionnaire) => {
     type: String,
     required: true,
     unique: true,
-  },
-  emailHash: {
-    type: String,
-    required: true,
-  },
-  salt: String,
-  confirm_email: {
-    type: String,
-    required: true,
-    default: false,
-  },
-  email_sent: {
-    type: String,
-    required: true,
-    default: false,
   },\n`
   return new Promise((resolve, reject) => {
     const importList = 'const mongoose = require(\'mongoose\')\n\n'

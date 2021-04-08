@@ -20,7 +20,7 @@ apiKey.apiKey = process.env.SIB_API_KEY
 
 const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi()
 
-const sendEmail = async (answer) => {
+const sendEmail = async (participant) => {
   const body = {
     sender: {
       name: 'Audrey from RadarTech',
@@ -28,19 +28,19 @@ const sendEmail = async (answer) => {
     },
     to: [
       {
-        email: `${answer.email}`,
+        email: `${participant.email}`,
       },
     ],
     subject: 'Validation de votre participation au Radar Tech 2021',
-    htmlContent: `<html><head></head><body><p>Cliquez sur <a href="${API_URL}/confirmEmail?hash=${answer.emailHash}">ce lien</a> pour valider votre participation au questionnaire.</p></body></html>`,
-    textContent: `Cliquez sur ce lien : ${API_URL}/confirmEmail?hash=${answer.emailHash}, pour valider votre participation au questionnaire.`,
+    htmlContent: `<html><head></head><body><p>Cliquez sur <a href="${API_URL}/confirmEmail?hash=${participant.emailHash}">ce lien</a> pour valider votre participation au questionnaire.</p></body></html>`,
+    textContent: `Cliquez sur ce lien : ${API_URL}/confirmEmail?hash=${participant.emailHash}, pour valider votre participation au questionnaire.`,
   }
 
   return apiInstance.sendTransacEmail(body)
     .then(_ => {
       logger.info('sendEmail: Email has been sent.')
-      updateEmailSent(answer.emailHash, true)
-      return answer
+      updateEmailSent(participant.emailHash, true)
+      return participant
     })
     .catch(e => e.error)
 }
@@ -50,20 +50,24 @@ const postAnswer = async (metier, answerData) => {
   console.log(metier)
   console.log(answerData)
   const obj = require(`./db/metiers/${metier}.js`)
+  const participant = require('./db/Participant.js')
   const model = obj[`${metier}Model`]
   console.log(model)
   const newAnswer = answerData
+  const newParticipant = { email: newAnswer.email, metier }
   try {
     const salt = createSalt()
     const hash = createHash(newAnswer.email, salt)
-    newAnswer.salt = salt
-    newAnswer.emailHash = hash
+    newParticipant.salt = salt
+    newParticipant.emailHash = hash
+    newAnswer.email = hash
     logger.info(`EmailHash created ${hash}`)
     await model.create(newAnswer)
-      .then(answer => {
-        console.log(answer)
-        logger.info(`postAnswer: A new answer has correctly been inserted in database. EmailHash is ${answer.emailHash}`)
-        return sendEmail(answer)
+      .then(_ => participant.create(newParticipant))
+      .then(participant => {
+        console.log(participant)
+        logger.info(`postAnswer: A new answer has correctly been inserted in database. EmailHash is ${participant.emailHash}`)
+        return sendEmail(participant)
       })
       .then(result => {
         logger.info(`postAnswer: Email has been sent. EmailHash is ${result.emailHash}`)

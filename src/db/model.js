@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const MONGO_URL = process.env.MONGO_URL || 'mongodb://localhost:27017/radarTechDB'
+const participantModel = require('./Participant.js')
 
 // no user needed locally but we need it for the prod environment
 mongoose.connect(MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -23,12 +24,11 @@ const updateEmailSent = async (emailHash, sent) => {
 }
 
 const updateAnswer = async (condition, update, options) => {
-  // A revoir
-  /* return await ParticipantModel.updateOne(condition, update, options)
+  return await participantModel.updateOne(condition, update, options)
     .catch(e => {
       console.log(e)
       return e
-    }) */
+    })
 }
 
 module.exports = { confirmEmail, updateEmailSent }
