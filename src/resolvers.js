@@ -47,13 +47,9 @@ const sendEmail = async (participant) => {
 }
 
 const postAnswer = async (metier, answerData) => {
-  console.log('postAnswer')
-  console.log(metier)
-  console.log(answerData)
   const obj = require(`./db/metiers/${metier}.js`)
   const participant = require('./db/Participant.js')
   const model = obj[`${metier}Model`]
-  console.log(model)
   const newAnswer = answerData
   const newParticipant = { email: newAnswer.email, metier }
   try {
@@ -66,7 +62,6 @@ const postAnswer = async (metier, answerData) => {
     await model.create(newAnswer)
       .then(_ => participant.create(newParticipant))
       .then(participant => {
-        console.log(participant)
         logger.info(`postAnswer: A new answer has correctly been inserted in database. EmailHash is ${participant.emailHash}`)
         return sendEmail(participant)
       })
