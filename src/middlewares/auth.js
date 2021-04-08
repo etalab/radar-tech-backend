@@ -3,7 +3,7 @@
  */
 const jwt = require('jsonwebtoken')
 const { promisify } = require('util')
-const { UserModel } = require('../db/model.js')
+const userModel = require('../db/User.js')
 require('dotenv').config()
 
 const jwtVerify = promisify(jwt.verify)
@@ -14,9 +14,9 @@ const tokenAlgo = process.env.ACCESS_TOKEN_ALGORITHM
 
 module.exports = async (req, res, next) => {
   try {
-    if (process.env.NODE_ENV === 'development') {
+    /* if (process.env.NODE_ENV === 'development') {
       return next()
-    }
+    } */
     const { headers } = req
 
     if (!headers.authorization) {
@@ -42,7 +42,7 @@ module.exports = async (req, res, next) => {
     })
 
     /** Check that a user with this userId exists */
-    const user = await UserModel.find({ _id: id, username, password })
+    const user = await userModel.find({ _id: id, username, password })
     if (user === undefined || user.length === 0) {
       throw new Error(`User ${username} doesn't exist`)
     }
