@@ -24,6 +24,7 @@ dokku config:set API_URL=http://<app_name>.app.etalab.studio
 dokku config:set ACCESS_TOKEN_TYPE='Bearer'
 dokku config:set ACCESS_TOKEN_ALGORITHM='HS256'
 dokku config:set ACCESS_TOKEN_SECRET='<token_secret>'
+dokku config:set SIB_API_KEY=<>
 ```
 `<token_secret>` correspond à la clé secrète utilisé pour généré 
 
