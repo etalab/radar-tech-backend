@@ -12,8 +12,9 @@ const createAttribute = (name, type, isRequired) => {
   }
 }
 
-const createSchema = (questionnaire) => {
-  const metier = questionnaire.metier
+const createSchema = (jsonFile) => {
+  const metier = jsonFile.metier
+  const questionnaire = jsonFile.questionnaire
   let mongoSchemaStr = `const ${metier} = {
   email: {
     type: String,
@@ -24,18 +25,20 @@ const createSchema = (questionnaire) => {
     const importList = 'const mongoose = require(\'mongoose\')\n\n'
     questionnaire.pages.forEach(page => {
       page.elements.forEach((element, i) => {
-        const name = element.name
-        const type = 'String'
-        if (element.type === 'matrix') {
-          let object = `const Object${i} = new mongoose.Schema({\n`
-          element.rows.forEach(row => {
-            object += `  ${row.replace(' ', '')}: String,\n`
-          })
-          object += '})\n'
-          mongoSchemaStr = object + mongoSchemaStr
-          mongoSchemaStr += createAttribute(name, `Object${i}`)
-        } else {
-          mongoSchemaStr += createAttribute(name, type)
+        if (element.name !== 'email') {
+          const name = element.name
+          const type = 'String'
+          if (element.type === 'matrix') {
+            let object = `const Object${i} = new mongoose.Schema({\n`
+            element.rows.forEach(row => {
+              object += `  ${row.replace(' ', '')}: String,\n`
+            })
+            object += '})\n'
+            mongoSchemaStr = object + mongoSchemaStr
+            mongoSchemaStr += createAttribute(name, `Object${i}`)
+          } else {
+            mongoSchemaStr += createAttribute(name, type)
+          }
         }
       })
     })
@@ -54,8 +57,8 @@ const createSchema = (questionnaire) => {
 
 const jsonFilePath = process.argv[2]
 const rawdata = fs.readFileSync(jsonFilePath)
-const questionnaire = JSON.parse(rawdata)
+const jsonFile = JSON.parse(rawdata)
 
-createSchema(questionnaire)
+createSchema(jsonFile)
   .then(_ => console.log('DONE'))
   .catch(err => console.log(err))
