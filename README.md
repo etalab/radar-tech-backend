@@ -224,10 +224,7 @@ Dans le fichier `graphqlSchema`, ajouter un attribut dans le dictionnaire `answe
     } = require("graphql");
     ```
 
-## Avec un script 
-__cette section et le script sont en cours, ne pas en tenir compte__
-Mettre à jour le fichier questionnaire.js avec le nouveau questionnaire.
-
-Exécuter le script `./scripts/createSchema.js`.
-
-Les fichiers `./src/graphqlSchema.js` et `./src/mongoSchema.js` seront mis à jour.
+# Evolution à prévoir
+- si une réponse est soumise avec un email déjà présent en db, un email est envoyé
+- être en mesure de modifier sa contribution
+- pouvoir supprimer sa soumission
