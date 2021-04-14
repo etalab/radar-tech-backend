@@ -43,7 +43,10 @@ const sendEmail = async (participant) => {
       updateEmailSent(participant.emailHash, true)
       return participant
     })
-    .catch(e => e.error)
+    .catch(e => {
+      logger.error(`An error occured in sendTransacEmail: ${e.error}`)
+      return e.error
+    })
 }
 
 const postAnswer = async (metier, answerData) => {
