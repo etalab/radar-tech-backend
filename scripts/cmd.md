@@ -1,32 +1,38 @@
 # Backend
 ## création du modèle
-git clone https://github.com/etalab/radar-tech-backend.git
-cd radar-tech-backend
-git checkout radarTechCreator
-cd scripts
-node deployOnDokku.js /Users/audrey/Documents/development/test-automatisation/designer.json
-cd ..
+```
+$ git clone https://github.com/etalab/radar-tech-backend.git
+$ cd radar-tech-backend
+$ cd scripts
+$ node deployOnDokku.js <path to json file>
+$ cd ..
+```
 
-## Creation app dokku et config
+## Creation de l'application Dokku
 ```
 export DOKKU_HOST='studio-01.infra.data.gouv.fr'
 export DOKKU_PORT='22'
 dokku apps:create <app_name>
+```
+### Ajouter des variables d'environnement
+```
 dokku config:set API_URL=http://<app_name>.app.etalab.studio
 dokku config:set ACCESS_TOKEN_TYPE='Bearer'
 dokku config:set ACCESS_TOKEN_ALGORITHM='HS256'
 dokku config:set ACCESS_TOKEN_SECRET='<token_secret>'
-dokku config:set SIB_API_KEY=<>
+dokku config:set SIB_API_KEY=<sendinblue_api_key>
 ```
-`<token_secret>` correspond à la clé secrète utilisé pour généré 
+`<token_secret>` correspond à la clé secrète utilisé pour généré les token
 
-## Création de la DB
-dokku mongo:create <service_name>
-dokku mongo:link <service_name> <app_name>
+## Création de la base de données
+```
+$ dokku mongo:create <mongo_service_name>
+$ dokku mongo:link <mongo_service_name> <app_name>
+```
 Dans le résultat retourné `Dsn` coorrespond à l'adresse de connexion à la DB, au format : `mongodb://<service_name>:2652096c746158e0fd896ff2b7416877@<service_user>:27017/<db_name>`
-Le nom de la base est à noté
 La commande Link a automatiquement ajouté l'URL vers Mongo en variable d'environnement.
-A ce stage il doit y avoir 4 variable d'environnement
+
+A ce stage il doit y avoir 4 variables d'environnement
 Pour vérifier il est possible de les lister
 ```
 $ dokku config
@@ -34,32 +40,35 @@ $ dokku config
 ACCESS_TOKEN_ALGORITHM:  HS256
 ACCESS_TOKEN_SECRET:     <token_secret>
 ACCESS_TOKEN_TYPE:       Bearer
-API_URL:                 http://.app.etalab.studio
-MONGO_URL:
+API_URL:                 http://<app_name>.app.etalab.studio
+MONGO_URL:               mongodb://<mongo_service_name>:<number_generated_by_dokku_service>@dokku-mongo-<mongo_service_name>:27017/<db_name>
+SIB_API_KEY:             <sendinblue_api_key>
 ```
 
 ## Tester
-cd ..
-npm install
-npm run dev
+```
+$ cd ..
+$ npm install
+$ npm run dev
+```
 
-## Lancer l'app sur dokku
-// ICI un nouveau schema est généré, sur dokku on déploie une branche
-//il faut donc faire un commit et un push sur une branche temporaire
-git checkout -B deploy
-git add src/
-git commit -m "generate schema"
-git push dokku deploy:master
+## Lancer l'application
+Un nouveau schema a été généré, branche doit être créée avec ces modifications.
+```
+$ git checkout -B deploy
+$ git add src/
+$ git commit -m "generate schema"
+$ git push dokku deploy:master
+```
 
 ## Creer un token
-
-En amont il faut créer un user manuellement
-on a pas d'interface d'admin donc la création de l'utilisateur est semi automatisée
+En amont il faut créer un utilisateur manuellement (à améliorer)
+Il n'y a pas d'interface d'administration, donc la création de l'utilisateur est semi-automatisée.
 
 ### Créer le salt et hash d'un mot de passe
 ```
-cd script
-node createHashAndSalt.js <username> <password>
+$ cd script
+$ node createHashAndSalt.js <username> <password>
 ```
 le salt et le mot de passe hashé sont affichées en console
 
@@ -67,13 +76,13 @@ le salt et le mot de passe hashé sont affichées en console
 ```
 dokku mongo:connect
 > use <nom de la db>
-> db.users.insert({ username: 'frontend-app', role: 'frontend', password: 'c06ff7007201e247ae1faa5ab6be2837feeea5ad883b8efd7e89090897d69ffd', salt: 'a43ae6043b711abd74972f46acf4c39e' })
+> db.users.insert({ username: 'frontend-app', role: 'frontend', password: '<hashed_password>', salt: '<salt>' })
 ```
 Le nom de la DB est indiqué à la fin de l'url de connexion `mongodb://<service_name>:2652096c746158e0fd896ff2b7416877@<service_user>:27017/<db_name>`
 
 ### Générer un token semi manuellement 
-Une route est dédié à la génération du token
-CURL
+Une route est dédiée à la génération du token
+#### Exemple avec CURL
 ```
 curl --location --request POST 'http://<nom_app>.app.etalab.studio/token' \
 --header 'Content-Type: application/json' \
@@ -83,7 +92,7 @@ curl --location --request POST 'http://<nom_app>.app.etalab.studio/token' \
 }'
 ```
 
-Nodejs Request
+#### Exemple avec Nodejs Request
 ```
 var request = require('request');
 var options = {
@@ -145,12 +154,12 @@ $ git push dokku <branch>:master
 ```
 
 # Des pistes d'amélioration 
-J'ai plusieurs fichiers en entrée avec un clé
-Cette clé représente le nom du modèle
-Je peux générer des modèles en fonctions des fichiers
-soit j'exécute le script sur un dossier
-soit on exécute plusieurs fois le scripts avec des noms de fichiers en entrée
-soit on a un fichier yaml et on récupère la liste des fichiers
+- automatiser toutes ces étapes
+- Ajouter une interface d'administration
+- J'ai plusieurs fichiers en entrée avec un clé. Cette clé représente le nom du modèle. Je peux générer des modèles en fonctions des fichiers: 
+   - soit j'exécute le script sur un dossier
+   - soit on exécute plusieurs fois le scripts avec des noms de fichiers en entrée
+   - soit on a un fichier yaml et on récupère la liste des fichiers
 
 
 
