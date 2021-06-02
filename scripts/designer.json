@@ -10,7 +10,7 @@
     "pages": [
       {
         "name": "page1",
-        "title": "Qui sont ces informaticien·ne·s ?",
+        "title": "Qui sont ces designer ?",
         "elements": [
           {
             "type": "radiogroup",
