@@ -118,11 +118,11 @@ Les requêtes suivantes sont celles autorisées actuellement
 ## Ajouter une réponse
 ### Mutation
 ```
-mutation CreateAnswer ($answer: AnswerInput) {
-  	createAnswer(answer: $answer) {
-      email
-    }
+mutation <metier>($answer: <metier>Input!) {
+  <metier>(answer: $answer) {
+    email
   }
+}
 ```
 ### Variable
 ```
@@ -134,36 +134,10 @@ mutation CreateAnswer ($answer: AnswerInput) {
 }
 ```
 
-## Ajouter plusieurs réponses
-### Mutation
-```
-mutation CreateMultipleAnswer($answerList: [AnswerInput]) {
-  createMultipleAnswer(answerList: $answerList) {
-    demo_age
-    email
-  }
-}
-```
-### Variable
-```
-{
-  "answerList": [
-    {
-      "email": "aaa@fdfdfs.fr",
-      "demo_age": "30-45"
-    },
-    {
-      "email": "bbb@fdfdfs.fr",
-      "demo_age": "45-60"
-    }
-  ]
-}
-```
-
 ## Accèder aux réponses 
 ```
 {
-  answer {
+  <metier> {
     email,
     demo_age,
     demo_genre,
