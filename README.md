@@ -70,6 +70,7 @@ C'est l'adresse du backend qui est utilisée dans le mail de confirmation de par
     ```
     $ dokku config:set nom_app API_URL=http://<nom_app>.app.etalab.studio
     ```
+    dokku config:set test-automatisation-rt API_URL=http://test-automatisation-rt.app.etalab.studio
 
 7. Pousser les modification locale
     ```
@@ -101,7 +102,7 @@ $ export DOKKU_PORT='22'
 ```
 2. Créer le service avec Dokku
 ```
-$ dokku mongo:add <db_name>
+$ dokku mongo:create <db_name>
 ```
 3. Lier la base avec l'application
 ```
@@ -223,10 +224,7 @@ Dans le fichier `graphqlSchema`, ajouter un attribut dans le dictionnaire `answe
     } = require("graphql");
     ```
 
-## Avec un script 
-__cette section et le script sont en cours, ne pas en tenir compte__
-Mettre à jour le fichier questionnaire.js avec le nouveau questionnaire.
-
-Exécuter le script `./scripts/createSchema.js`.
-
-Les fichiers `./src/graphqlSchema.js` et `./src/mongoSchema.js` seront mis à jour.
+# Evolution à prévoir
+- si une réponse est soumise avec un email déjà présent en db, un email est envoyé
+- être en mesure de modifier sa contribution
+- pouvoir supprimer sa soumission

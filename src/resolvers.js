@@ -1,6 +1,8 @@
-const crypto = require('crypto')
-const { AnswerModel, updateEmailSent } = require('./db/model.js')
+const { updateEmailSent } = require('./db/model.js')
+const userModel = require('./db/User.js')
 const { logger } = require('./middlewares/logger.js')
+const { createSalt, createHash } = require('./utils/helpers.js')
+
 require('dotenv').config()
 
 let API_URL = process.env.API_URL
@@ -19,7 +21,7 @@ apiKey.apiKey = process.env.SIB_API_KEY
 
 const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi()
 
-const sendEmail = async (answer) => {
+const sendEmail = async (participant) => {
   const body = {
     sender: {
       name: 'Audrey from RadarTech',
@@ -27,54 +29,96 @@ const sendEmail = async (answer) => {
     },
     to: [
       {
-        email: `${answer.email}`,
+        email: `${participant.email}`,
       },
     ],
     subject: 'Validation de votre participation au Radar Tech 2021',
-    htmlContent: `<html><head></head><body><p>Cliquez sur <a href="${API_URL}/confirmEmail?hash=${answer.emailHash}">ce lien</a> pour valider votre participation au questionnaire.</p></body></html>`,
-    textContent: `Cliquez sur ce lien : ${API_URL}/confirmEmail?hash=${answer.emailHash}, pour valider votre participation au questionnaire.`,
+    htmlContent: `<html><head></head><body><p>Cliquez sur <a href="${API_URL}/confirmEmail?hash=${participant.emailHash}">ce lien</a> pour valider votre participation au questionnaire.</p></body></html>`,
+    textContent: `Cliquez sur ce lien : ${API_URL}/confirmEmail?hash=${participant.emailHash}, pour valider votre participation au questionnaire.`,
   }
 
   return apiInstance.sendTransacEmail(body)
     .then(_ => {
       logger.info('sendEmail: Email has been sent.')
-      updateEmailSent(answer.emailHash, true)
-      return answer
+      updateEmailSent(participant.emailHash, true)
+      return participant
     })
-    .catch(e => e.error)
+    .catch(e => {
+      logger.error(`An error occured in sendTransacEmail: ${e.error}`)
+      return e.error
+    })
 }
 
-function createSaltAndHash (email) {
+const postAnswer = async (metier, answerData) => {
+  const obj = require(`./db/metiers/${metier}.js`)
+  const participant = require('./db/Participant.js')
+  const model = obj[`${metier}Model`]
+  const newAnswer = answerData
+  const newParticipant = { email: newAnswer.email, metier }
+  try {
+    const salt = createSalt()
+    const hash = createHash(newAnswer.email, salt)
+    newParticipant.salt = salt
+    newParticipant.emailHash = hash
+    newAnswer.email = hash
+    logger.info(`EmailHash created ${hash}`)
+    await model.create(newAnswer)
+      .then(_ => participant.create(newParticipant))
+      .then(participant => {
+        logger.info(`postAnswer: A new answer has correctly been inserted in database. EmailHash is ${participant.emailHash}`)
+        return sendEmail(participant)
+      })
+      .then(result => {
+        logger.info(`postAnswer: Email has been sent. EmailHash is ${result.emailHash}`)
+        return result
+      })
+  } catch (err) {
+    logger.error(`postAnswer: An error occured during postAnswer function ${err}`)
+    throw err
+  }
+}
+
+const createUser = (username, password, role) => {
+  try {
+    const salt = createSalt()
+    const passwordHashed = createHash(password, salt)
+    const userData = { username, password: passwordHashed, salt, role }
+    const user = userModel(userData)
+    return user.save()
+  } catch (err) {
+    logger.error(`createUser: An error occured during createUser function ${err}`)
+    throw err
+  }
+}
+
+const loginUser = async (username, password) => {
   return new Promise((resolve, reject) => {
-    crypto.randomBytes(16, (err, salt) => {
-      if (err) throw reject(err)
-      const hash = crypto.pbkdf2Sync(email, salt.toString('hex'), 1000, 32, 'sha512').toString('hex')
-      resolve({ salt, hash })
-    })
+    userModel.find({ username })
+      .then(users => {
+        if (password === null) {
+          reject(new Error('password is required'))
+        }
+        if (users.length === 0) {
+          reject(new Error("this user doesn't exist"))
+        }
+        const user = users[0]
+        console.log(user)
+        if (user.password === null || user.salt === null) {
+          reject(new Error('password, salt and hash are required to compare'))
+        }
+        const passwordHashed = createHash(password, user.salt)
+        console.log(passwordHashed)
+        console.log(user.password)
+        if (passwordHashed === user.password) {
+          resolve(user)
+        } else {
+          reject(new Error("password doesn't correspond to the user password"))
+        }
+      })
+      .catch(err => {
+        reject(err)
+      })
   })
 }
 
-const postAnswer = async (answer) => {
-  const newAnswer = answer
-  return createSaltAndHash(newAnswer.email)
-    .then(res => {
-      newAnswer.salt = res.salt
-      newAnswer.emailHash = res.hash
-      logger.info(`EmailHash created ${res.hash}`)
-      return AnswerModel.create(newAnswer)
-    })
-    .then(result => {
-      logger.info(`postAnswer: A new answer has correctly been inserted in database. EmailHash is ${result.emailHash}`)
-      return sendEmail(result)
-    })
-    .then(result => {
-      logger.info(`postAnswer: Email has been sent. EmailHash is ${result.emailHash}`)
-      return result
-    })
-    .catch(err => {
-      logger.error(`postAnswer: An error occured during postAnswer function ${err}`)
-      return err
-    })
-}
-
-module.exports = postAnswer
+module.exports = { postAnswer, createUser, loginUser }

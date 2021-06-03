@@ -1,78 +1,64 @@
-const questionnaire = require('./questionnaire.js')
 const fs = require('fs')
 
-// TYPE
-/*
-const ARRAY_OF_STRING = (yup.array().of(yup.string()), [String])
-const STRING = (yup.string, String)
-const NUMBER = (yup.number, Number)
-
-education_formation: {
-
-ecole_inge: Object { selection: (1) […], filieres: "ddd" }
-
-uni_autres: Object { selection: (1) […], filieres: "ddd" }
+const createAttribute = (name, type, isRequired) => {
+  if (isRequired !== undefined && isRequired === true) {
+    return `  ${name}: {
+        type: ${type},
+        required: true
+      }, 
+    \n`
+  } else {
+    return `  ${name}: ${type},\n`
+  }
 }
 
-*/
-
-let mongoSchemaStr = 'const mongoSchema = {\n' +
-` email: {
+const createSchema = (jsonFile) => {
+  const metier = jsonFile.metier
+  const questionnaire = jsonFile.questionnaire
+  let mongoSchemaStr = `const ${metier} = {
+  email: {
     type: String,
     required: true,
-    unique: true
-  },
-  emailHash: {
-    type: String,
-    required: true
-  },
-  salt: String,
-  confirm_email: {
-    type: String,
-    required: true,
-    default: false
-  },
-  email_sent: {
-    type: String,
-    required: true,
-    default: false
-  }, \n`
+    unique: true,
+  },\n`
+  return new Promise((resolve, reject) => {
+    const importList = 'const mongoose = require(\'mongoose\')\n\n'
+    questionnaire.pages.forEach(page => {
+      page.elements.forEach((element, i) => {
+        if (element.name !== 'email') {
+          const name = element.name
+          const type = 'String'
+          if (element.type === 'matrix') {
+            let object = `const Object${i} = new mongoose.Schema({\n`
+            element.rows.forEach(row => {
+              object += `  ${row.replace(' ', '')}: String,\n`
+            })
+            object += '})\n'
+            mongoSchemaStr = object + mongoSchemaStr
+            mongoSchemaStr += createAttribute(name, `Object${i}`)
+          } else {
+            mongoSchemaStr += createAttribute(name, type)
+          }
+        }
+      })
+    })
 
-let answerTypeGqlStr = `
-const {
-  GraphQLID,
-  GraphQLNonNull,
-  GraphQLString,
-} = require("graphql");
+    let strToFile = importList + mongoSchemaStr + '}\n\n'
+    strToFile += `const ${metier}Schema = mongoose.Schema(${metier})\n`
+    strToFile += `const ${metier}Model = mongoose.model('${metier}', ${metier})\n`
+    strToFile += `module.exports = { ${metier}Schema, ${metier}Model }\n`
 
-const answerTypeGql = {
-  id: { type: GraphQLID },
-  email: { type: GraphQLNonNull(GraphQLString) },\n`
-
-const pages = questionnaire.pages
-pages.forEach(page => {
-  page.elements.forEach(element => {
-    const attributName = element.name
-    if (element.isReqired !== undefined && element.isReqired === true) {
-      mongoSchemaStr += `  ${attributName}: {
-          type: String,
-          required: true
-        }, 
-      \n`
-      answerTypeGqlStr += ` ${attributName}: { type: GraphQLNonNull(GraphQLString) }, \n`
-    } else {
-      mongoSchemaStr += `  ${attributName}: String, \n`
-      answerTypeGqlStr += `  ${attributName}: { type: GraphQLString }, \n`
-    }
+    fs.writeFile(`../src/db/metiers/${metier}.js`, strToFile, (err) => {
+      if (err) { reject(err) }
+      resolve(true)
+    })
   })
-})
+}
 
-fs.writeFile('./src/mongoSchema.js', mongoSchemaStr + '}; \n\n module.exports = mongoSchema;', (err) => {
-  if (err) throw err
-  console.log('mongoSchema.js has been saved!')
-})
+const jsonFilePath = process.argv[2]
+const rawdata = fs.readFileSync(jsonFilePath)
+const jsonFile = JSON.parse(rawdata)
 
-fs.writeFile('./src/graphqlSchema.js', answerTypeGqlStr + '}; \n\n module.exports = answerTypeGql;', (err) => {
-  if (err) throw err
-  console.log('graphqlSchema.js has been saved!')
-})
+createSchema(jsonFile)
+  .then(_ => console.log('DONE'))
+  .catch(err => console.log(err))

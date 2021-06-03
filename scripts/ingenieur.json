@@ -1,0 +1,155 @@
+{
+  "key": 1,
+  "metier": "ingenieur",
+  "metier_str": "Ingénieur",
+  "description": "Une description pour les ingénieurs",
+  "questionnaire": {
+    "title": "Questions profession ingénieurs",
+    "description": "",
+    "key": "ingenieur",
+    "pages": [
+      {
+        "name": "page1",
+        "title": "Qui sont ces informaticien·ne·s ?",
+        "elements": [
+          {
+            "type": "radiogroup",
+            "name": "demo_genre",
+            "title": "À quel genre vous identifiez-vous ?",
+            "isRequired": true,
+            "choices": [
+              "Homme",
+              "Femme",
+              "Non-binaire, genderqueer, ou gender non-conforming"
+            ]
+          },
+          {
+            "type": "dropdown",
+            "name": "demo_age",
+            "title": "Dans quelle tranche d’âge vous situez vous ?",
+            "choices": [
+              "15-19",
+              "20-24",
+              "25-29",
+              "30-34",
+              "35-39",
+              "40-44",
+              "45-49",
+              "50-54",
+              "55-59",
+              "60-64",
+              "65+"
+            ]
+          },
+          {
+            "type": "dropdown",
+            "name": "demo_titre",
+            "title": "Quels termes décrivent le mieux votre position au sein de l'administration ?",
+            "choices": [
+              "Ingénieur informatique",
+              "Développeur informatique",
+              "Développeur web",
+              "Développeur front-end",
+              "Développeur back-end",
+              "Développeur mobile",
+              "Designer",
+              "Datascientist",
+              "Technicien de maintenance",
+              "Chef·fe de projet",
+              "Chef de produit",
+              "Manager",
+              "Cadre",
+              "DevOps",
+              "SRE",
+              "Administrateur",
+              "Expert en sécurité informatique",
+              "Consultant",
+              "Scrum-master",
+              "Commerciale",
+              "Directeur"
+            ]
+          },
+          {
+            "type": "dropdown",
+            "name": "demo_fonctions",
+            "title": "Quelles fonctions remplissez-vous dans votre administration ?",
+            "choices": [
+              "Développement informatique",
+              "Support informatique",
+              "Design de service",
+              "Web design",
+              "Maintenance",
+              "Administration réseau",
+              "Administration de base de données",
+              "Sécurité des réseaux"
+            ]
+          },
+          {
+            "type": "radiogroup",
+            "name": "demo_administration",
+            "title": "De quelle administration dépendez-vous ?",
+            "choices": ["Ministère", "Branche", "Administration"],
+            "colCount": 3
+          },
+          {
+            "type": "radiogroup",
+            "name": "demo_status",
+            "title": "Sous quel statut ?",
+            "choices": ["CDI", "CDD", "Freelance", "Autre"],
+            "colCount": 4
+          },
+          {
+            "type": "radiogroup",
+            "name": "demo_rythme",
+            "title": "À quel rythme ?",
+            "choices": ["À plein-temps", "À mi-temps"],
+            "colCount": 2
+          },
+          {
+            "type": "radiogroup",
+            "name": "travail_activite",
+            "title": "Avez-vous une autre activité en parallèle ?",
+            "choices": ["Oui", "Non"],
+            "colCount": 2
+          },
+          {
+            "type": "checkbox",
+            "name": "travail_activite_autre",
+            "title": "Précisez:",
+            "visibleIf": "{travail_activite}= 'Oui'",
+            "choices": ["Freelance", "CDI", "CDD"],
+            "hasOther": true
+          },
+          {
+            "type": "radiogroup",
+            "name": "demo_entree_admin",
+            "title": "Comment avez-vous obtenu votre poste au sein de l’administration ?",
+            "choices": [
+              "Concours",
+              "Détachement",
+              "Candidature",
+              "Appel d'offre"
+            ],
+            "colCount": 2
+          }
+        ]
+      },
+      {
+        "name": "page2",
+        "elements": [
+          {
+            "type": "text",
+            "name": "email",
+            "title": "Votre adresse email",
+            "isRequired": true,
+            "validators": [
+              {
+                "type": "email"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
