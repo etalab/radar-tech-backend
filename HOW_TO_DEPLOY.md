@@ -122,10 +122,10 @@ cd ..
 mv <metier>.json radar-tech-frontend/pages-metiers/<metier>.json
 ```
 ## Tester 
-Créez un fichier de variables d'environnemen `.env.development`en copiant `.env_example`: 
+Ajouter les variables d'environnement pour DOKKU
 ```
-GATSBY_API_URL=http://<app_name>.app.etalab.studio/graphql
-GATSBY_API_TOKEN=<token généré>
+dokku config:set GATSBY_API_URL=http://radartech-api.app.etalab.studio/graphql
+dokku config:set GATSBY_API_TOKEN=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImZyb250ZW5kIiwicGFzc3dvcmQiOiI4MTY1NGEzYWI1ZGM4MzMyYWFmNDBjZGNjYzBhNTA5ZDFmMmY1ODVhNGRhMTkwMTQzNWU3NTU5YTQ0YzliNWY1IiwiaWQiOiI2MGI4ODc3Zjg2NmM3YjIzOTEwMTMzYjYiLCJpYXQiOjE2MjI3MDc4NTR9.V4X5xs6guKVYfOwgmFg_Mvoh9OW23mXO4jrIwQviTJk
 ```
 ```
 $ npm install
