@@ -11,10 +11,6 @@ node createSchema <chemin_metier_json>
 cd ..
 ```
 
-**Patché dans cette pull request**
-
-~~**Attention** : Il est nécessaire de d'abord créer le dossier `metiers` avant le lancer le script `createSchema` pour que celui-ci fonctionne~~
-
 ### Créer l'application Dokku
 
 ```
