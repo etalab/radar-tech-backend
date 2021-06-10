@@ -434,43 +434,6 @@
             ]
           },
           {
-            "type": "rating",
-            "name": "profils_tech",
-            "title": "Quel est le pourcentage de profils tech au sein de votre structure ?",
-            "rateValues": [
-              {
-                "value": 0,
-                "text": "Seul·e"
-              },
-              {
-                "value": 20,
-                "text": "10-20%"
-              },
-              {
-                "value": 40,
-                "text": "20-40%"
-              },
-              {
-                "value": 60,
-                "text": "40-60%"
-              },
-              {
-                "value": 80,
-                "text": "60-80%"
-              },
-              {
-                "value": 100,
-                "text": "80-100%"
-              }
-            ]
-          },
-          {
-            "type": "rating",
-            "name": "satisfaction",
-            "title": "Êtes-vous satisfait·e de votre travail ?",
-            "description": "1: Pas satisfait·e      5: Très satisfait·e"
-          },
-          {
             "type": "radiogroup",
             "name": "recherche_travail",
             "title": "Êtes-vous à la recherche d’un nouvel emploi ?",
