@@ -27,7 +27,7 @@ const createSchema = (jsonFile) => {
       page.elements.forEach((element, i) => {
         if (element.name !== 'email') {
           const name = element.name
-          const type = 'String'
+          let type = 'String'
           if (element.type === 'matrix') {
             let object = `const Object${i} = new mongoose.Schema({\n`
             element.rows.forEach(row => {
@@ -37,6 +37,9 @@ const createSchema = (jsonFile) => {
             mongoSchemaStr = object + mongoSchemaStr
             mongoSchemaStr += createAttribute(name, `Object${i}`)
           } else {
+            if (element.type === 'checkbox') {
+              type = '[String]'
+            }
             mongoSchemaStr += createAttribute(name, type)
           }
         }
