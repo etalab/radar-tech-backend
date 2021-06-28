@@ -1,4 +1,4 @@
-# Radar-Tech ([version originale disponible ici](https://github.com/etalab/radar-tech-backend/blob/master/HOW_TO_DEPLOY.md))
+# Radar-Tech
 ## Déployer le Back-End
 ### Créer le modèle
 
