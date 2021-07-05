@@ -1,122 +1,28 @@
-# Projet RadarTech
-## Objectif 
-Nous proposons de consolider  un questionnaire  et de le soumettre aux milliers d'agents concernés via un site web dédié, puis de produire une page avec les des résultats obtenus. La DINUM ne souhaite par recourir à des outils de sondage classique car elle vise uneaccessibilité maximale et une expérience utilisateur propre à ce site, tant pour les questionsque pour la présentation des résultats.
+# RadarTech : Backend
 
-Le présent projet est le *backend* de l'application. Les frontend, développé en React avec Gatsby est disponible dans [un autre projet](https://github.com/etalab/radar-tech-frontend).
-## Outils Utilisés
-- graphql
-- nodejs
-- mongodb
+Le présent projet est le **Backend** de l'application * [RadarTech](https://github.com/etalab/radar-tech).
+
+## Outils utilisés
+
+- GraphQL
+- NodeJS
+- mongoDB
 
 ## Pré-requis
+
 - Node 14
 - npm 6
 
-# Développement
-Ajouter les variables nécessaire en prenant exemple sur le fichier `.env.exemple` et en le renommant en `.env`.
+# Documentation
 
-Lancer l'application : 
-`npm test`
+## GraphQL
+ 
+Les requêtes suivantes sont celles autorisées actuellement :
 
-L'application est lancé sur le port 3001.
-[Un client graphql est disponible.](https://localhost:3001/graphql)
+### Ajouter une réponse
 
-# DOKKU
-## Créer une application
-1. Cloner le dépot en local
-2. Ajouter un fichier Procfile (opt)
+#### Mutation
 
-    __ce fichier est déjà disponible dans ce dépot__
-    
-    Le fichier contient la commande nécessaire pour lancer l'application : 
-
-    ```
-    web: node src/app.js
-    ```
-
-    Ajouter et enregistrer le fichier :
-    ```
-    $ git add Profile / git commit -m "add procfile"
-    ```
-
-3. Créer des variables d'environnement
-    ```
-    $ export DOKKU_HOST='studio-01.infra.data.gouv.fr'
-    $ export DOKKU_PORT='22'
-    ```
-
-4. Vérifier que les variables sont à jour :
-    ```
-    $ env | grep DOKKU
-    ```
-
-5. Déployer l'application
-
-    - Créer une nouvelle application
-    A la racine du dossier du projet
-    ```
-    $ dokku apps:create <nom_app>`
-    ```
-
-    Un remote Dokku est ajouté pointant sur le dépôt distant
-    - Mettre a jour une application existante
-    Ajouter le dépôt dokku en local :
-    ```
-    $ git remote add dokku dokku@studio-01.infra.data.gouv.fr:<nom_app>
-    ```
-  
-6. Ajoute la variable d'environnement API_URL
-C'est l'adresse du backend qui est utilisée dans le mail de confirmation de participation.
-    ```
-    $ dokku config:set nom_app API_URL=http://<nom_app>.app.etalab.studio
-    ```
-    dokku config:set test-automatisation-rt API_URL=http://test-automatisation-rt.app.etalab.studio
-
-7. Pousser les modification locale
-    ```
-    $ git push dokku master
-    Ou 
-    $ git push dokku <nom_branche>:master // pour pousser une autre branche
-    ```
-
-Notes : 
-- /!\ Le client dokku en local infère le nom de l'application à partir du nom de remote.
-- Pour pouvoir effectuer ces opérations sur le serveur Etalab il est nécessaire d'avoir partagé votre clé ssh à l'un des administrateurs.
-
-## Variables d'environnement nécessaires : 
-
-- API_URL:               *à ajouter MANUELLEMENT*
-- DOKKU_APP_RESTORE:     1 __ajouté par Dokku__
-- DOKKU_APP_TYPE:        herokuish __ajouté par Dokku__
-- DOKKU_PROXY_PORT:      80 __ajouté par Dokku__
-- DOKKU_PROXY_PORT_MAP:  http:80:5000 __ajouté par Dokku__
-- GIT_REV:               99b3316454abea522684d6807294927579991faf __ajouté par Dokku__
-- MONGO_URL:             __ajouté par Dokku__
-
-
-## Créer une base de données avec Dokku
-1. Si ce n'est pas déjà fait, créer des variables d'environnement 
-```
-$ export DOKKU_HOST='studio-01.infra.data.gouv.fr'
-$ export DOKKU_PORT='22'
-```
-2. Créer le service avec Dokku
-```
-$ dokku mongo:create <db_name>
-```
-3. Lier la base avec l'application
-```
-$ dokku mongo:link <db_name> <app_namme>
-```
-Ajoute automatiquement la variable __MONGO_URL__ dans les variables d'environnement dokku.
-
-## Logs
-Pour voir les logs : `$ dokku logs <nom_app> --tail`
-
-# GRAPHQL 
-Les requêtes suivantes sont celles autorisées actuellement
-## Ajouter une réponse
-### Mutation
 ```
 mutation <metier>($answer: <metier>Input!) {
   <metier>(answer: $answer) {
@@ -124,7 +30,9 @@ mutation <metier>($answer: <metier>Input!) {
   }
 }
 ```
-### Variable
+
+#### Variable
+
 ```
 {
   "answer": {
@@ -134,7 +42,8 @@ mutation <metier>($answer: <metier>Input!) {
 }
 ```
 
-## Accèder aux réponses 
+### Accèder aux réponses
+
 ```
 {
   <metier> {
@@ -146,48 +55,59 @@ mutation <metier>($answer: <metier>Input!) {
 }
 ```
 
-# Mongo
+## mongoDB
+
 Voici une liste des commandes utiles pour administrer la base :
+
 ```
 $ use radarTechDB
-$ db.answers.find() // Afficher tous les docuements de la collection answers
+$ db.answers.find() // Afficher tous les documents de la collection answers
 $ db.answers.remove( { } ) // Supprimer tous les docuements de la collection answers
 ```
 
-# Authentification
+### Authentification
+
 1. Copier le fichier ./script/.env.example et le renommer en .env
 1. Remplir la valeur MONGO_URL dans le fichier .env
 2. Remplir la valeur de ACCESS_TOKEN_SECRET avec celle du serveur (dokku)
 3. Lancer le script __createAccessToken__ avec le nom de l'utilisateur et son rôle 
 Rôles acceptés : ["frontend", "dev"]
+
 ```
 node createAccessToken.js <username> <usertoken>
 ```
 
-# Mettre à jour le modèle de données
-## Manuellement
-1. ajouter un attribut dans le schéma mongo
+## Mettre à jour le modèle de données
+
+### Manuellement
+
+1. Ajouter un attribut dans le schéma mongo
+
 Dans le fichier `mongoSchema.js`, ajouter un attribut dans le dictionnaire `mongoSchema`.
-Les types sont disponibles dans [la documentation Mongo](https://mongoosejs.com/docs/schematypes.html).
-Différentes clés peuvent être ajoutées, par exemple : 
-    ```
+Les types sont disponibles dans [la documentation mongoose](https://mongoosejs.com/docs/schematypes.html).
+Différentes clés peuvent être ajoutées, par exemple :
+
+```
     confirm_email: {
         type: String,
         required: true,
         default: false
       }
-    ```
-    Sachant que `containers_bool: String` est équivalent à `containers_bool: String`.
+```
 
-2. ajouter un attribut dans le schéma graphql
-Dans le fichier `graphqlSchema`, ajouter un attribut dans le dictionnaire `answerTypeGql` en suivant le format : 
-    ```
+Sachant que `containers_bool: String` est équivalent à `containers_bool: String`.
+
+2. Ajouter un attribut dans le schéma GraphQL
+Dans le fichier `graphqlSchema`, ajouter un attribut dans le dictionnaire `answerTypeGql` en suivant le format :
+
+```
     NOM_ATTRIBUT: { type: <GRAPHQL_TYPE>}
-    ```
-    Les types disponibles sont détaillés dans [la documentation de la librairie graphql-js](https://graphql.org/graphql-js/type/)
-    
-    Le type doit être importé :
-    ```
+```
+
+Les types disponibles sont détaillés dans [la documentation de la librairie GraphQL-JS](https://graphql.org/graphql-js/type/)
+Le type doit être importé :
+
+```
     const {
         GraphQLID,
       GraphQLNonNull,
@@ -196,9 +116,10 @@ Dans le fichier `graphqlSchema`, ajouter un attribut dans le dictionnaire `answe
       GraphQLInt,
 
     } = require("graphql");
-    ```
+```
 
 # Evolution à prévoir
-- si une réponse est soumise avec un email déjà présent en db, un email est envoyé
-- être en mesure de modifier sa contribution
-- pouvoir supprimer sa soumission
+
+- Si une réponse est soumise avec un email déjà présent en DB, un email est envoyé
+- Être en mesure de modifier sa contribution
+- Pouvoir supprimer sa soumission
