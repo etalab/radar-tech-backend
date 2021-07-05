@@ -1,6 +1,6 @@
 # RadarTech : Backend
 
-Le présent projet est le **Backend** de l'application * [RadarTech](https://github.com/etalab/radar-tech).
+Le présent projet est le **Backend** de l'application [RadarTech](https://github.com/etalab/radar-tech).
 
 ## Outils utilisés
 
@@ -13,15 +13,15 @@ Le présent projet est le **Backend** de l'application * [RadarTech](https://git
 - Node 14
 - npm 6
 
-# Documentation
+## Documentation
 
-## GraphQL
+### GraphQL
  
 Les requêtes suivantes sont celles autorisées actuellement :
 
-### Ajouter une réponse
+#### Ajouter une réponse
 
-#### Mutation
+##### Mutation
 
 ```
 mutation <metier>($answer: <metier>Input!) {
@@ -31,7 +31,7 @@ mutation <metier>($answer: <metier>Input!) {
 }
 ```
 
-#### Variable
+##### Variable
 
 ```
 {
@@ -42,7 +42,7 @@ mutation <metier>($answer: <metier>Input!) {
 }
 ```
 
-### Accèder aux réponses
+#### Accèder aux réponses
 
 ```
 {
@@ -55,7 +55,7 @@ mutation <metier>($answer: <metier>Input!) {
 }
 ```
 
-## mongoDB
+### mongoDB
 
 Voici une liste des commandes utiles pour administrer la base :
 
@@ -65,21 +65,19 @@ $ db.answers.find() // Afficher tous les documents de la collection answers
 $ db.answers.remove( { } ) // Supprimer tous les docuements de la collection answers
 ```
 
-### Authentification
+#### Authentification
 
-1. Copier le fichier ./script/.env.example et le renommer en .env
-1. Remplir la valeur MONGO_URL dans le fichier .env
-2. Remplir la valeur de ACCESS_TOKEN_SECRET avec celle du serveur (dokku)
-3. Lancer le script __createAccessToken__ avec le nom de l'utilisateur et son rôle 
+1. Copier le fichier `./script/.env.example` et le renommer en `.env`
+2. Remplir la valeur `MONGO_URL` dans le fichier `.env`
+3. Remplir la valeur de `ACCESS_TOKEN_SECRET` avec celle du serveur
+4. Lancer le script `__createAccessToken__` avec le nom de l'utilisateur et son rôle 
 Rôles acceptés : ["frontend", "dev"]
 
 ```
 node createAccessToken.js <username> <usertoken>
 ```
 
-## Mettre à jour le modèle de données
-
-### Manuellement
+#### Mettre à jour le modèle de données (manuellement)
 
 1. Ajouter un attribut dans le schéma mongo
 
@@ -104,8 +102,7 @@ Dans le fichier `graphqlSchema`, ajouter un attribut dans le dictionnaire `answe
     NOM_ATTRIBUT: { type: <GRAPHQL_TYPE>}
 ```
 
-Les types disponibles sont détaillés dans [la documentation de la librairie GraphQL-JS](https://graphql.org/graphql-js/type/)
-Le type doit être importé :
+Les types disponibles sont détaillés dans [la documentation de la librairie GraphQL-JS](https://graphql.org/graphql-js/type/). Le type doit être importé :
 
 ```
     const {
@@ -118,7 +115,7 @@ Le type doit être importé :
     } = require("graphql");
 ```
 
-# Evolution à prévoir
+## Évolution à prévoir
 
 - Si une réponse est soumise avec un email déjà présent en DB, un email est envoyé
 - Être en mesure de modifier sa contribution
