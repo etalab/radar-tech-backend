@@ -1,6 +1,6 @@
 # RadarTech : Backend
 
-Le présent projet est le **Backend** de l'application [RadarTech](https://github.com/etalab/radar-tech).
+Ce projet est le **Backend** de l'application [RadarTech](https://github.com/etalab/radar-tech). La procédure de déploiement est disponible sur le dépôt principal de l'application.
 
 ## Outils utilisés
 
