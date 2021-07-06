@@ -3,7 +3,7 @@
  */
 const jwt = require('jsonwebtoken')
 const { promisify } = require('util')
-const userModel = require('../db/User.js')
+const User = require('../db/User.js')
 require('dotenv').config()
 
 const jwtVerify = promisify(jwt.verify)
@@ -42,7 +42,7 @@ module.exports = async (req, res, next) => {
     })
 
     /** Check that a user with this userId exists */
-    const user = await userModel.find({ _id: id, username, password })
+    const user = await User.find({ _id: id, username, password })
     if (user === undefined || user.length === 0) {
       throw new Error(`User ${username} doesn't exist`)
     }

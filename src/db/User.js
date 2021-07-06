@@ -1,4 +1,6 @@
 const mongoose = require('mongoose')
+require('dotenv').config()
+
 const userSchema = {
   username: {
     type: String,
@@ -21,5 +23,6 @@ const userSchema = {
   },
 }
 
-const userModel = mongoose.model('user', userSchema)
-module.exports = userModel
+const User = mongoose.model('user', userSchema)
+
+module.exports = User

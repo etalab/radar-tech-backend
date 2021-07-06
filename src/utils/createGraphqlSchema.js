@@ -1,8 +1,8 @@
 
 const createType = require('mongoose-schema-to-graphql')
 const { GraphQLList } = require('graphql')
-const { logger } = require('../middlewares/logger.js')
-const { postAnswer } = require('../resolvers.js')
+const logger = require('../utils/logger.js')
+const { postAnswer } = require('../controllers/answer.js')
 
 module.exports = (metier) => {
   const obj = require(`../db/metiers/${metier}.js`)

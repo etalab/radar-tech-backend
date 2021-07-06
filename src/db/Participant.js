@@ -28,5 +28,5 @@ const participantSchema = {
   },
 }
 
-const participantModel = mongoose.model('participant', mongoose.Schema(participantSchema))
-module.exports = participantModel
+const Participant = mongoose.model('participant', mongoose.Schema(participantSchema))
+module.exports = Participant
