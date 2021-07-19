@@ -1,0 +1,293 @@
+{
+  "key": 2,
+  "metier": "designer",
+  "metier_str": "Designers",
+  "metier_icon": "icon-design.jpeg",
+  "description": "Questionnaire à destination des designers. Ouvert juin-juillet 2021.",
+  "questionnaire": {
+    "title": "",
+    "description": "",
+    "key": "",
+    "pages": [
+      {
+        "name": "",
+        "title": "Vous:",
+        "elements": [
+          {
+            "type": "radiogroup",
+            "name": "genre",
+            "title": "Votre genre",
+            "choices": ["Masculin", "Féminin", "Ne préfère pas partager"]
+          },
+          {
+            "type": "text",
+            "name": "age",
+            "title": "Votre âge",
+            "inputType": "number",
+            "min": "1",
+            "max": "99"
+          },
+          {
+            "type": "checkbox",
+            "name": "sit-professionnelle",
+            "title": "Quel est votre statut ?",
+            "choices": [
+              "Titulaire (catégorie A)",
+              "Titulaire (catégorie B)",
+              "CDD (catégorie A)",
+              "CDD (catégorie B)",
+              "Vacataire",
+              "Stagiaire"
+            ],
+            "colCount": 2
+          },
+          {
+            "type": "checkbox",
+            "name": "affiliation",
+            "title": "À quelle administration êtes-vous rattaché·e ?",
+            "choices": ["voir", "avec", "TALENTS"],
+            "hasOther": true,
+            "otherText": "Autres (précisez)"
+          }
+        ]
+      },
+      {
+        "elements": [
+          {
+            "type": "text",
+            "name": "annees-experience",
+            "title": "Combien d'années d’expérience avez-vous dans cette administration ?",
+            "inputType": "number",
+            "min": "1",
+            "max": "99"
+          },
+          {
+            "type": "radiogroup",
+            "name": "annees-experience-detail",
+            "title": "Combien d'années d’expérience avez-vous dans ce métier ?",
+            "choices": [
+              "Étudiant",
+              "Moins d’un an (Jeune diplômé)",
+              "Entre 1 et 3 ans (Junior)",
+              "Entre 4 et 10 ans (Confirmé)",
+              "10+ ans (Senior)"
+            ]
+          },
+          {
+            "type": "checkbox",
+            "name": "formation",
+            "title": "Quelle est votre formation ?",
+            "choices": [
+              "Formation universitaire ou en IUT",
+              "Formation professionnelle",
+              "École d’ingénieur",
+              "École de design",
+              "École du numérique",
+              "École d’art",
+              "École d’ingénieur",
+              "École de commerce",
+              "Pas de formation"
+            ],
+            "colCount": 2
+          },
+          {
+            "type": "checkbox",
+            "name": "dernier-diplome",
+            "title": "Quel est votre dernier diplôme obtenu ?",
+            "choices": [
+              "Brevet",
+              "Baccalauréat général",
+              "Baccalauréat professionnel",
+              "Licence",
+              "Master",
+              "Doctorat"
+            ],
+            "colCount": 2
+          }
+        ]
+      },
+      {
+        "name": "page1",
+        "title": "Fonction professionnelle",
+        "elements": [
+          {
+            "type": "ranking",
+            "name": "expertise",
+            "title": "A quelle expertise principale votre activité se rattache-t-elle ?",
+            "choices": [
+              "Recherche utilisateur",
+              "Design graphique",
+              "Design d’interfaces",
+              "Ergonomie, Accesibilité",
+              "Design interactif",
+              "Design UX",
+              "Design de service",
+              "Direction artistique",
+              "Design industriel",
+              "Design d’espace",
+              "Design stratégique",
+              "Animation, facilitation",
+              "Design management"
+            ],
+            "colCount": 2
+          },
+          {
+            "type": "comment",
+            "name": "intitule-fonction",
+            "title": "Quel est l’intitulé exact de votre fonction ?",
+            "placeHolder": "Chef designer de choses"
+          }
+        ]
+      },
+      {
+        "name": "page2",
+        "title": "Compétences, outils et méthodes de design",
+        "elements": [
+          {
+            "type": "checkbox",
+            "title": "Quelles sont les compétences métiers que vous utilisez au quotidien (3) ?",
+            "name": "",
+            "choices": []
+          },
+          {
+            "type": "checkbox",
+            "title": "Quelles sont vos autres compétences métiers (3) ?",
+            "name": "",
+            "choices": []
+          },
+          {
+            "type": "checkbox",
+            "title": "Autres compétences utiles à vos missions (3) ?",
+            "name": "",
+            "choices": []
+          },
+          {
+            "type": "checkbox",
+            "title": "Quels outils utilisez-vous ?",
+            "name": "",
+            "choices": []
+          }
+        ]
+      },
+      {
+        "name": "page3",
+        "elements": [
+          {
+            "type": "radiogroup",
+            "name": "travail-facon",
+            "title": "De quelle façon travaillez-vous ?",
+            "choices": [
+              "Un seul projet",
+              "Un seul projet et en appui ponctuel",
+              "Plusieurs projets",
+              "Encadrement et pilotage"
+            ]
+          },
+          {
+            "type": "radiogroup",
+            "name": "travail-en-equipe",
+            "title": "Travaillez-vous en équipe ?",
+            "choices": [
+              "Travaille seul·e",
+              "Au sein d’une équipe",
+              "Avec plusieurs équipes ou services"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "page4",
+        "title": "Votre vision du métier de designer dans votre service",
+        "elements": [
+          {
+            "type": "radiogroup",
+            "name": "competences-perception",
+            "title": "Quelle est la perception globale des compétences de design dans votre service ?",
+            "choices": [
+              "Fortement valorisées",
+              "Moyennement valorisées",
+              "Faiblement valorisées",
+              "Pas valorisées du tout"
+            ]
+          },
+          {
+            "type": "radiogroup",
+            "name": "competences-exploitation",
+            "title": "Selon vous, les compétences de design dans votre service sont",
+            "choices": [
+              "Mal ou sous-exploitées",
+              "Bien exploitées",
+              "Pas d’avis"
+            ]
+          },
+          {
+            "type": "comment",
+            "name": "besoins",
+            "title": "Selon vous, quels autres besoins en design il y aurait-il dans votre service ?"
+          }
+        ]
+      },
+      {
+        "name": "page5",
+        "title": "Évolution et formation",
+        "elements": [
+          {
+            "type": "radiogroup",
+            "name": "travail-satisfaction",
+            "title": "Êtes-vous satisfait·e de votre travail ?",
+            "choices": ["Oui", "Non"],
+            "colCount": 2
+          },
+          {
+            "type": "comment",
+            "name": "travail-satisfaction-text",
+            "title": "Précisez",
+            "visibleIf": "{travail-satisfaction} = 'Non'"
+          },
+          {
+            "type": "radiogroup",
+            "name": "recherche-emploi",
+            "title": "Êtes-vous à la recherche d’un nouvel emploi ?",
+            "choices": ["Oui", "Non"],
+            "colCount": 2
+          },
+          {
+            "type": "comment",
+            "name": "recherche-emploi-text",
+            "title": "Précisez",
+            "visibleIf": "{recherche-emploi} = 'Oui'"
+          },
+          {
+            "type": "radiogroup",
+            "name": "besoin-nouvelles-competences",
+            "title": "Auriez-vous besoin d’acquérir de nouvelles compétences ou de vous former ?",
+            "choices": ["Oui", "Non"],
+            "colCount": 2
+          },
+          {
+            "type": "text",
+            "name": "besoin-nouvelles-competences-text",
+            "title": "Précisez",
+            "visibleIf": "{besoin-nouvelles-competences} = 'Oui'"
+          }
+        ]
+      },
+      {
+        "name": "page6",
+        "elements": [
+          {
+            "type": "text",
+            "name": "email",
+            "title": "Votre adresse email",
+            "isRequired": true,
+            "validators": [
+              {
+                "type": "email"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
