@@ -1,0 +1,243 @@
+{
+  "key": 3,
+  "metier": "data-scientist",
+  "metier_str": "Data scientists",
+  "metier_icon": "icon-datascience.jpeg",
+  "description": "Questionnaire à destination des designers. Ouvert juin-juillet 2021.",
+  "questionnaire": {
+    "title": "",
+    "description": "",
+    "key": "",
+    "pages": [
+      {
+        "name": "",
+        "title": "Vous:",
+        "elements": [
+          {
+            "type": "radiogroup",
+            "name": "genre",
+            "title": "Votre genre",
+            "choices": ["Masculin", "Féminin", "Ne préfère pas partager"]
+          },
+          {
+            "type": "text",
+            "name": "age",
+            "title": "Votre âge",
+            "inputType": "number",
+            "min": "1",
+            "max": "99"
+          },
+          {
+            "type": "checkbox",
+            "name": "sit-professionnelle",
+            "title": "Quel est votre statut ?",
+            "choices": [
+              "Titulaire (catégorie A)",
+              "Titulaire (catégorie B)",
+              "CDD (catégorie A)",
+              "CDD (catégorie B)",
+              "Vacataire",
+              "Stagiaire"
+            ],
+            "colCount": 2
+          },
+          {
+            "type": "checkbox",
+            "name": "affiliation",
+            "title": "À quelle administration êtes-vous rattaché·e ?",
+            "choices": ["voir", "avec", "TALENTS"],
+            "hasOther": true,
+            "otherText": "Autres (précisez)"
+          }
+        ]
+      },
+      {
+        "elements": [
+          {
+            "type": "text",
+            "name": "annees-experience",
+            "title": "Combien d'années d’expérience avez-vous dans cette administration ?",
+            "inputType": "number",
+            "min": "1",
+            "max": "99"
+          },
+          {
+            "type": "radiogroup",
+            "name": "annees-experience-detail",
+            "title": "Combien d'années d’expérience avez-vous dans ce métier ?",
+            "choices": [
+              "Étudiant",
+              "Moins d’un an (Jeune diplômé)",
+              "Entre 1 et 3 ans (Junior)",
+              "Entre 4 et 10 ans (Confirmé)",
+              "10+ ans (Senior)"
+            ]
+          },
+          {
+            "type": "checkbox",
+            "name": "formation",
+            "title": "Quelle est votre formation ?",
+            "choices": [
+              "Formation universitaire ou en IUT",
+              "Formation professionnelle",
+              "École d’ingénieur",
+              "École de design",
+              "École du numérique",
+              "École d’art",
+              "École d’ingénieur",
+              "École de commerce",
+              "Pas de formation"
+            ],
+            "colCount": 2
+          },
+          {
+            "type": "checkbox",
+            "name": "dernier-diplome",
+            "title": "Quel est votre dernier diplôme obtenu ?",
+            "choices": [
+              "Brevet",
+              "Baccalauréat général",
+              "Baccalauréat professionnel",
+              "Licence",
+              "Master",
+              "Doctorat"
+            ],
+            "colCount": 2
+          }
+        ]
+      },
+      {
+        "name": "page1",
+        "title": "Qui sont ces data scientists ?",
+        "elements": [
+          {
+            "type": "comment",
+            "name": "ecole-pertinente",
+            "title": "Quelle école ou formation fut la plus pertinente pour votre métier ?",
+            "placeHolder": "Ecole Nationale des Moyennes et Médians"
+          },
+          {
+            "type": "ranking",
+            "name": "technologies-principales",
+            "title": "Quelles sont les technologies sur lesquelles porte principalement votre expertise ?",
+            "choices": [
+              "TAL",
+              "Traitement du signal",
+              "Traitement des données temporelles",
+              "Computer vision",
+              "Statistiques et probabilités"
+            ]
+          },
+          {
+            "type": "checkbox",
+            "name": "methodes-et-algos",
+            "title": "Quelles sont vos méthodes et algorithmes ?",
+            "choices": [
+              "Méthodes lineaires (regression logistique/lineaire)",
+              "Arbres de decision et forêts aléatoires",
+              "Méthodes d’ensemble (xgboost, etc)",
+              "Réseaux de neurones",
+              "Réseaux de neurones profonds (deep learning)",
+              "Méthodes bayesiennes"
+            ],
+            "hasOther": true,
+            "colCount": 2
+          },
+          {
+            "type": "checkbox",
+            "name": "frameworks",
+            "title": "Vos frameworks de _machine learning_",
+            "choices": [
+              "SAS",
+              "SPSS",
+              "Scikit-learn",
+              "TensorFlow",
+              "Keras",
+              "Xgboost",
+              "PyTorch",
+              "LightGBM",
+              "Caret",
+              "Catboost",
+              "Prophet",
+              "Fast.ai",
+              "Tidymodels"
+            ],
+            "hasOther": true,
+            "colCount": 3
+          },
+          {
+            "type": "ranking",
+            "name": "autres-competences",
+            "title": "Autres compétences utiles à vos missions",
+            "choices": [
+              "Développement web",
+              "Datavisualisation",
+              "Machine learning ops",
+              "Data engineering",
+              "Communication",
+              "Management"
+            ]
+          },
+          {
+            "type": "radiogroup",
+            "name": "publient-codes-sources",
+            "title": "Publiez-vous vos codes sources ?",
+            "choices": [
+              "Oui, systématiquement",
+              "Oui, de temps en temps",
+              "Non"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "page2",
+        "title": "Votre vision du métier de datascientiste dans votre service",
+        "elements": [
+          {
+            "type": "radiogroup",
+            "title": "Quelle est la perception globale des compétences de datascience dans votre service ?",
+            "name": "competences-perception",
+            "choices": [
+              "Fortement valorisées",
+              "Moyennement valorisées",
+              "Faiblement valorisées",
+              "Pas valorisées du tout"
+            ]
+          },
+          {
+            "type": "radiogroup",
+            "title": "Selon vous, les compétences de datascience dans votre service sont",
+            "name": "competences-exploitation",
+            "choices": [
+              "Mal ou sous-exploitées",
+              "Bien exploitées",
+              "Pas d’avis"
+            ]
+          },
+          {
+            "type": "besoins",
+            "title": "Selon vous, quels autres besoins en datascience il y aurait-il dans votre service ?",
+            "name": "besoins"
+          }
+        ]
+      },
+      {
+        "name": "page3",
+        "elements": [
+          {
+            "type": "text",
+            "name": "email",
+            "title": "Votre adresse email",
+            "isRequired": true,
+            "validators": [
+              {
+                "type": "email"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
