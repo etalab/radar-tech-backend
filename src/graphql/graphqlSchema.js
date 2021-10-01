@@ -15,7 +15,6 @@ const mutationFields = {}
 fs.readdirSync(mongoSchemaFolder).forEach(file => {
   if (!file.includes('.gitkeep')) {
     const metier = file.replace('.js', '')
-    console.log(metier)
     const { query, mutation } = createGraphqlSchema(metier)
     queryFields[metier] = query
     mutationFields[metier] = mutation
